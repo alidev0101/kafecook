@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400" fill="none">
+  <rect width="400" height="400" fill="#f3e9dc"/>
+  <circle cx="200" cy="165" r="75" fill="#e7d0b5"/>
+  <path d="M145 165 Q145 110 200 110 Q255 110 255 165 Q255 200 230 215 Q215 225 200 225 Q185 225 170 215 Q145 200 145 165Z" fill="#be7040" opacity="0.25"/>
+  <!-- Cup -->
+  <rect x="155" y="200" width="90" height="65" rx="12" fill="#92462c" opacity="0.8"/>
+  <rect x="160" y="205" width="80" height="55" rx="9" fill="#b05a34" opacity="0.9"/>
+  <!-- Steam -->
+  <path d="M185 195 Q180 183 185 172 Q190 161 185 150" stroke="#be7040" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.5"/>
+  <path d="M200 192 Q195 180 200 169 Q205 158 200 147" stroke="#be7040" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.5"/>
+  <path d="M215 195 Q210 183 215 172 Q220 161 215 150" stroke="#be7040" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.5"/>
+  <!-- Handle -->
+  <path d="M245 215 Q265 215 265 232 Q265 249 245 249" stroke="#763a29" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <!-- Saucer -->
+  <ellipse cx="200" cy="268" rx="60" ry="10" fill="#92462c" opacity="0.4"/>
+  <!-- Text -->
+  <text x="200" y="315" text-anchor="middle" font-family="Tahoma,Arial,sans-serif" font-size="14" fill="#92462c" opacity="0.6">بدون تصویر</text>
+</svg>
