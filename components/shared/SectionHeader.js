@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function SectionHeader({ title, subtitle, href, hrefLabel = "مشاهده همه", className }) {
   return (
@@ -12,10 +12,10 @@ export default function SectionHeader({ title, subtitle, href, hrefLabel = "مش
       {href && (
         <Link
           href={href}
-          className="flex items-center gap-1.5 text-sm font-medium text-coffee-600 hover:text-coffee-800 transition-colors group"
+          className="flex items-center gap-1.5 text-sm font-medium text-coffee-600 dark:text-coffee-400 hover:text-coffee-800 dark:hover:text-coffee-300 transition-colors group"
         >
           {hrefLabel}
-          <ArrowLeft size={16} className="transition-transform group-hover:-translate-x-1" />
+          <ArrowLeft size={14} className="transition-transform group-hover:-translate-x-1" />
         </Link>
       )}
     </div>

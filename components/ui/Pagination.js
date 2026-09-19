@@ -1,21 +1,18 @@
 "use client";
 
 import { ChevronRight, ChevronLeft } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { formatNumber } from "@/lib/utils";
+import { cn, formatNumber } from "@/lib/utils";
 
 export default function Pagination({ page, totalPages, onPageChange }) {
-  if (totalPages <= 1) return null;
+  if (!totalPages || totalPages <= 1) return null;
 
   const pages = [];
   const delta = 2;
-  const left = page - delta;
+  const left  = page - delta;
   const right = page + delta + 1;
 
   for (let i = 1; i <= totalPages; i++) {
-    if (i === 1 || i === totalPages || (i >= left && i < right)) {
-      pages.push(i);
-    }
+    if (i === 1 || i === totalPages || (i >= left && i < right)) pages.push(i);
   }
 
   const result = [];
@@ -26,30 +23,34 @@ export default function Pagination({ page, totalPages, onPageChange }) {
     prev = p;
   }
 
+  const btnBase = "h-9 w-9 flex items-center justify-center rounded-xl text-sm font-medium transition-all duration-150";
+
   return (
-    <nav className="flex items-center justify-center gap-1.5 py-6" dir="rtl">
+    <nav className="flex items-center justify-center gap-1.5 py-6" dir="rtl" aria-label="صفحه‌بندی">
       <button
         onClick={() => onPageChange(page - 1)}
         disabled={page === 1}
-        className="h-10 w-10 flex items-center justify-center rounded-xl border border-gray-200 hover:bg-coffee-50 hover:border-coffee-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+        className={cn(btnBase, "border border-border text-muted-foreground hover:bg-accent hover:text-foreground disabled:opacity-40 disabled:cursor-not-allowed")}
+        aria-label="صفحه قبل"
       >
-        <ChevronRight size={18} />
+        <ChevronRight size={16} />
       </button>
 
       {result.map((item, i) =>
         item === "..." ? (
-          <span key={`dot-${i}`} className="h-10 w-10 flex items-center justify-center text-gray-400">
-            ...
+          <span key={`dot-${i}`} className="h-9 w-9 flex items-center justify-center text-muted-foreground text-sm">
+            ···
           </span>
         ) : (
           <button
             key={item}
             onClick={() => onPageChange(item)}
+            aria-current={item === page ? "page" : undefined}
             className={cn(
-              "h-10 w-10 flex items-center justify-center rounded-xl text-sm font-medium transition-all",
+              btnBase,
               item === page
-                ? "bg-coffee-600 text-white shadow-warm"
-                : "border border-gray-200 text-gray-600 hover:bg-coffee-50 hover:border-coffee-300"
+                ? "bg-coffee-600 dark:bg-coffee-500 text-white shadow-warm"
+                : "border border-border text-muted-foreground hover:bg-accent hover:text-foreground"
             )}
           >
             {formatNumber(item)}
@@ -60,9 +61,10 @@ export default function Pagination({ page, totalPages, onPageChange }) {
       <button
         onClick={() => onPageChange(page + 1)}
         disabled={page === totalPages}
-        className="h-10 w-10 flex items-center justify-center rounded-xl border border-gray-200 hover:bg-coffee-50 hover:border-coffee-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+        className={cn(btnBase, "border border-border text-muted-foreground hover:bg-accent hover:text-foreground disabled:opacity-40 disabled:cursor-not-allowed")}
+        aria-label="صفحه بعد"
       >
-        <ChevronLeft size={18} />
+        <ChevronLeft size={16} />
       </button>
     </nav>
   );

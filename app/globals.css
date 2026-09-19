@@ -3,34 +3,27 @@
 @tailwind utilities;
 
 /* ─── Fonts ──────────────────────────────────────────────────────────── */
-@import url("https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@font-face {
+  font-family: 'Morabba';
+  src: url('/fonts/Morabba/woff2/Morabba-Medium.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 
-/*
-  فونت Morabba را خودتان دانلود کرده و در public/fonts/Morabba/ قرار دهید
-  فایل‌های مورد نیاز: Morabba-Regular.woff2, Morabba-Medium.woff2, Morabba-Bold.woff2, Morabba-ExtraBold.woff2
-*/
 @font-face {
-  font-family: "Morabba";
-  src: url("/fonts/Morabba/Morabba-Regular.woff2") format("woff2");
-  font-weight: 400;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Morabba";
-  src: url("/fonts/Morabba/Morabba-Medium.woff2") format("woff2");
+  font-family: 'Dana';
+  src: url('/fonts/Dana/woff2/DanaFaNum-Medium.woff2') format('woff2');
   font-weight: 500;
+  font-style: normal;
   font-display: swap;
 }
+
 @font-face {
-  font-family: "Morabba";
-  src: url("/fonts/Morabba/Morabba-Bold.woff2") format("woff2");
+  font-family: 'Dana';
+  src: url('/fonts/Dana/woff2/DanaFaNum-DemiBold.woff2') format('woff2');
   font-weight: 700;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Morabba";
-  src: url("/fonts/Morabba/Morabba-ExtraBold.woff2") format("woff2");
-  font-weight: 800;
+  font-style: normal;
   font-display: swap;
 }
 
@@ -59,7 +52,7 @@
     --radius: 0.75rem;
 
     --font-morabba: "Morabba";
-    --font-vazir: "Vazirmatn";
+    --font-vazir: "Dana";
   }
 
   /* ─── Dark Mode ─────────────────────────────────────────────────────── */
@@ -97,12 +90,12 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+    font-family: "Dana", Tahoma, Arial, sans-serif;
   }
 
   /* ─── Typography with Morabba ───────────────────────────────────────── */
   h1, h2, h3, .font-display, .heading {
-    font-family: "Morabba", "Vazirmatn", Tahoma, sans-serif;
+    font-family: "Morabba", "Dana", Tahoma, sans-serif;
   }
 
   /* ─── Scrollbar ─────────────────────────────────────────────────────── */

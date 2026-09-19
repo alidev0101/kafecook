@@ -1,77 +1,81 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { SlidersHorizontal } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { SlidersHorizontal, X } from "lucide-react";
 import ProductGrid from "@/components/product/ProductGrid";
 import ProductFilters from "@/components/product/ProductFilters";
 import Pagination from "@/components/ui/Pagination";
 import Breadcrumb from "@/components/shared/Breadcrumb";
-import { formatNumber } from "@/lib/utils";
 import Button from "@/components/ui/Button";
-import Modal from "@/components/ui/Modal";
+import { formatNumber } from "@/lib/utils";
 
 export default function ProductsPage() {
-  const router = useRouter();
+  const router       = useRouter();
   const searchParams = useSearchParams();
-  const [filterModalOpen, setFilterModalOpen] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
 
   const filters = {
-    page: searchParams.get("page") || 1,
-    limit: 12,
-    search: searchParams.get("search") || "",
-    category: searchParams.get("category") || "",
-    brand: searchParams.get("brand") || "",
-    minPrice: searchParams.get("minPrice") || "",
-    maxPrice: searchParams.get("maxPrice") || "",
-    minRating: searchParams.get("minRating") || "",
-    inStock: searchParams.get("inStock") || "",
-    sort: searchParams.get("sort") || "newest",
-    isFeatured: searchParams.get("isFeatured") || "",
-    isNew: searchParams.get("isNew") || "",
-    isBestSeller: searchParams.get("isBestSeller") || "",
+    page:         searchParams.get("page")        || 1,
+    limit:        12,
+    search:       searchParams.get("search")      || "",
+    category:     searchParams.get("category")    || "",
+    brand:        searchParams.get("brand")       || "",
+    minPrice:     searchParams.get("minPrice")    || "",
+    maxPrice:     searchParams.get("maxPrice")    || "",
+    minRating:    searchParams.get("minRating")   || "",
+    inStock:      searchParams.get("inStock")     || "",
+    sort:         searchParams.get("sort")        || "newest",
+    isFeatured:   searchParams.get("isFeatured")  || "",
+    isNew:        searchParams.get("isNew")       || "",
+    isBestSeller: searchParams.get("isBestSeller")|| "",
   };
 
-  const buildQueryString = (f) => {
-    const params = new URLSearchParams();
-    Object.entries(f).forEach(([k, v]) => {
-      if (v !== "" && v !== null && v !== undefined) params.set(k, v);
-    });
-    return params.toString();
+  const buildQS = (f) => {
+    const p = new URLSearchParams();
+    Object.entries(f).forEach(([k, v]) => { if (v !== "" && v != null) p.set(k, v); });
+    return p.toString();
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["products", filters],
-    queryFn: () =>
-      axios.get(`/api/products?${buildQueryString(filters)}`).then((r) => r.data),
+    queryKey:  ["products", filters],
+    queryFn:   () => axios.get(`/api/products?${buildQS(filters)}`).then((r) => r.data),
     keepPreviousData: true,
     staleTime: 60 * 1000,
   });
 
   const handleFilterChange = useCallback(
     (changes) => {
-      const newFilters = { ...filters, ...changes, page: 1 };
-      router.push(`/products?${buildQueryString(newFilters)}`, { scroll: false });
+      router.push(`/products?${buildQS({ ...filters, ...changes, page: 1 })}`, { scroll: false });
     },
     [filters, router]
   );
 
-  const handlePageChange = (page) => {
-    router.push(`/products?${buildQueryString({ ...filters, page })}`, { scroll: true });
-  };
+  // close sidebar on resize to desktop
+  useEffect(() => {
+    const handle = () => { if (window.innerWidth >= 1024) setFilterOpen(false); };
+    window.addEventListener("resize", handle);
+    return () => window.removeEventListener("resize", handle);
+  }, []);
+
+  const activeFiltersCount = [filters.category, filters.brand, filters.minPrice, filters.maxPrice, filters.minRating, filters.inStock].filter(Boolean).length;
 
   return (
     <div className="bg-background min-h-screen">
       <div className="container-custom py-6">
         <Breadcrumb items={[{ label: "محصولات" }]} />
 
-        <div className="flex items-center justify-between mb-6">
+        {/* Page header */}
+        <div className="flex items-center justify-between mb-6 mt-2">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">همه محصولات</h1>
+            <h1 className="text-2xl font-black text-foreground" style={{ fontFamily: "Morabba, Vazirmatn, sans-serif" }}>
+              همه محصولات
+            </h1>
             {data?.pagination && (
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-muted-foreground mt-0.5">
                 {formatNumber(data.pagination.total)} محصول
               </p>
             )}
@@ -82,20 +86,25 @@ export default function ProductsPage() {
             variant="secondary"
             size="sm"
             className="lg:hidden flex items-center gap-2"
-            onClick={() => setFilterModalOpen(true)}
+            onClick={() => setFilterOpen(true)}
           >
-            <SlidersHorizontal size={16} />
+            <SlidersHorizontal size={15} />
             فیلترها
+            {activeFiltersCount > 0 && (
+              <span className="bg-coffee-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
+                {activeFiltersCount}
+              </span>
+            )}
           </Button>
         </div>
 
-        <div className="flex gap-7">
-          {/* Sidebar filters — desktop */}
+        <div className="flex gap-6">
+          {/* ── Sidebar ── */}
           <aside className="hidden lg:block w-64 flex-shrink-0">
             <ProductFilters filters={filters} onFilterChange={handleFilterChange} />
           </aside>
 
-          {/* Products */}
+          {/* ── Grid ── */}
           <main className="flex-1 min-w-0">
             <ProductGrid
               products={data?.data}
@@ -106,28 +115,54 @@ export default function ProductsPage() {
               <Pagination
                 page={data.pagination.page}
                 totalPages={data.pagination.totalPages}
-                onPageChange={handlePageChange}
+                onPageChange={(p) =>
+                  router.push(`/products?${buildQS({ ...filters, page: p })}`, { scroll: true })
+                }
               />
             )}
           </main>
         </div>
       </div>
 
-      {/* Mobile filter modal */}
-      <Modal
-        isOpen={filterModalOpen}
-        onClose={() => setFilterModalOpen(false)}
-        title="فیلترها"
-        size="sm"
-      >
-        <ProductFilters
-          filters={filters}
-          onFilterChange={(changes) => {
-            handleFilterChange(changes);
-            setFilterModalOpen(false);
-          }}
-        />
-      </Modal>
+      {/* ── Mobile Filter Drawer ── */}
+      <AnimatePresence>
+        {filterOpen && (
+          <>
+            <motion.div
+              key="backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+              onClick={() => setFilterOpen(false)}
+            />
+            <motion.div
+              key="drawer"
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 28, stiffness: 300 }}
+              className="fixed top-0 left-0 bottom-0 w-80 max-w-[90vw] bg-card border-r border-border z-50 overflow-y-auto shadow-xl"
+            >
+              <div className="flex items-center justify-between p-4 border-b border-border">
+                <h2 className="font-bold text-foreground">فیلترها</h2>
+                <button
+                  onClick={() => setFilterOpen(false)}
+                  className="p-1.5 rounded-xl hover:bg-accent text-muted-foreground"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+              <div className="p-4">
+                <ProductFilters
+                  filters={filters}
+                  onFilterChange={(c) => { handleFilterChange(c); setFilterOpen(false); }}
+                />
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

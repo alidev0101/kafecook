@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { motion } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
 import ProductGrid from "@/components/product/ProductGrid";
 
@@ -14,13 +15,19 @@ export default function NewProducts() {
   });
 
   return (
-    <section className="py-16 md:py-20 bg-cream-50">
+    <section className="py-16 md:py-20 bg-muted/30 dark:bg-background/80">
       <div className="container-custom">
-        <SectionHeader
-          title="تازه‌واردها"
-          subtitle="جدیدترین قهوه‌هایی که به کلکسیون ما اضافه شده‌اند"
-          href="/products?isNew=true"
-        />
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <SectionHeader
+            title="تازه‌واردها"
+            subtitle="جدیدترین قهوه‌هایی که به کلکسیون ما اضافه شده‌اند"
+            href="/products?isNew=true"
+          />
+        </motion.div>
         <ProductGrid products={data} loading={isLoading} />
       </div>
     </section>

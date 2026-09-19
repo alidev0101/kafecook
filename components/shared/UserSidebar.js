@@ -4,68 +4,70 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
-import {
-  User, Package, MapPin, Heart, Settings, LogOut, ChevronLeft,
-} from "lucide-react";
+import { User, Package, MapPin, Heart, LogOut, ChevronLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { href: "/profile", icon: User, label: "پروفایل" },
-  { href: "/orders", icon: Package, label: "سفارش‌هایم" },
-  { href: "/addresses", icon: MapPin, label: "آدرس‌هایم" },
-  { href: "/wishlist", icon: Heart, label: "علاقه‌مندی‌ها" },
+  { href: "/profile",   icon: User,    label: "پروفایل" },
+  { href: "/orders",    icon: Package, label: "سفارش‌هایم" },
+  { href: "/addresses", icon: MapPin,  label: "آدرس‌هایم" },
+  { href: "/wishlist",  icon: Heart,   label: "علاقه‌مندی‌ها" },
 ];
 
 export default function UserSidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
 
+  const isActive = (href) => pathname === href || pathname.startsWith(href + "/");
+
   return (
     <aside className="w-full lg:w-64 flex-shrink-0">
       {/* User card */}
-      <div className="bg-white rounded-2xl shadow-card p-5 mb-4 flex items-center gap-3">
-        <div className="w-12 h-12 rounded-full bg-coffee-100 flex items-center justify-center overflow-hidden flex-shrink-0">
+      <div className="bg-card border border-border rounded-2xl shadow-card p-4 mb-3 flex items-center gap-3">
+        <div className="w-11 h-11 rounded-full bg-coffee-100 dark:bg-coffee-900/40 flex items-center justify-center overflow-hidden flex-shrink-0 ring-2 ring-coffee-200 dark:ring-coffee-800">
           {session?.user?.avatar ? (
-            <Image src={session.user.avatar} alt="پروفایل" width={48} height={48} className="object-cover" />
+            <Image src={session.user.avatar} alt="پروفایل" width={44} height={44} className="object-cover" />
           ) : (
-            <User size={22} className="text-coffee-500" />
+            <User size={20} className="text-coffee-500" />
           )}
         </div>
         <div className="min-w-0">
-          <p className="font-bold text-gray-800 truncate">{session?.user?.name}</p>
-          <p className="text-xs text-gray-400 truncate">{session?.user?.email}</p>
+          <p className="font-bold text-foreground text-sm truncate">{session?.user?.name}</p>
+          <p className="text-xs text-muted-foreground truncate">{session?.user?.email}</p>
         </div>
       </div>
 
       {/* Nav */}
-      <nav className="bg-white rounded-2xl shadow-card overflow-hidden">
+      <nav className="bg-card border border-border rounded-2xl shadow-card overflow-hidden">
         {navItems.map((item) => {
-          const active = pathname === item.href || pathname.startsWith(item.href + "/");
+          const active = isActive(item.href);
           return (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center justify-between px-5 py-3.5 text-sm font-medium border-b border-gray-50 last:border-0 transition-all duration-150",
+                "flex items-center justify-between px-4 py-3 text-sm font-medium border-b border-border last:border-0 transition-all duration-150",
                 active
-                  ? "bg-coffee-50 text-coffee-700"
-                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                  ? "bg-coffee-50 dark:bg-coffee-900/20 text-coffee-700 dark:text-coffee-300"
+                  : "text-muted-foreground hover:bg-accent hover:text-foreground"
               )}
             >
               <span className="flex items-center gap-3">
-                <item.icon size={17} className={active ? "text-coffee-600" : "text-gray-400"} />
+                <item.icon
+                  size={16}
+                  className={active ? "text-coffee-600 dark:text-coffee-400" : "text-muted-foreground"}
+                />
                 {item.label}
               </span>
-              <ChevronLeft size={15} className={active ? "text-coffee-400" : "text-gray-300"} />
+              <ChevronLeft size={13} className={active ? "text-coffee-400" : "text-muted-foreground/40"} />
             </Link>
           );
         })}
         <button
           onClick={() => signOut({ callbackUrl: "/" })}
-          className="w-full flex items-center gap-3 px-5 py-3.5 text-sm font-medium text-red-500 hover:bg-red-50 transition-colors"
+          className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
         >
-          <LogOut size={17} />
-          خروج از حساب
+          <LogOut size={16} /> خروج از حساب
         </button>
       </nav>
     </aside>

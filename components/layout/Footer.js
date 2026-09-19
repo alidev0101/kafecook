@@ -42,7 +42,6 @@ export default function Footer() {
             </div>
             <form
               className="flex gap-2 w-full md:w-auto min-w-[300px]"
-              onSubmit={(e) => e.preventDefault()}
               aria-label="فرم عضویت در خبرنامه"
             >
               <input
