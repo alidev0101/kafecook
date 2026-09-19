@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 /**
  * POST /api/cart/sync
  * Client cart را کاملاً با سرور sync می‌کند.

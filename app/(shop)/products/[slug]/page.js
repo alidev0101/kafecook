@@ -13,7 +13,7 @@ import {
 import { toast } from "sonner";
 import {
   formatPrice, calcDiscount, formatNumber,
-  ROAST_LABELS, GRIND_LABELS,
+  ROAST_LABELS, GRIND_LABELS,cn
 } from "@/lib/utils";
 import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore } from "@/store/wishlistStore";

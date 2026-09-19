@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -12,7 +13,7 @@ import { toast } from "sonner";
 import { loginSchema } from "@/validations/auth";
 import Button from "@/components/ui/Button";
 
-export default function LoginPage() {
+function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading]           = useState(false);
   const router                          = useRouter();
@@ -54,7 +55,6 @@ export default function LoginPage() {
       <p className="text-coffee-300 text-sm text-center mb-8">به کافه کوک خوش آمدید</p>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {/* Email */}
         <div>
           <label className="block text-sm font-medium text-coffee-200 mb-1.5">
             ایمیل <span className="text-red-400">*</span>
@@ -62,9 +62,7 @@ export default function LoginPage() {
           <div className="relative">
             <Mail size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
             <input
-              type="email"
-              dir="ltr"
-              placeholder="example@email.com"
+              type="email" dir="ltr" placeholder="example@email.com"
               className={`w-full h-11 pr-10 pl-4 rounded-xl border bg-white/10 text-white placeholder:text-gray-500 text-sm focus:outline-none focus:ring-2 focus:ring-coffee-400 transition-all ${errors.email ? "border-red-400" : "border-white/20 hover:border-white/40"}`}
               {...register("email")}
             />
@@ -72,15 +70,10 @@ export default function LoginPage() {
           {errors.email && <p className="text-xs text-red-400 mt-1">{errors.email.message}</p>}
         </div>
 
-        {/* Password */}
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label className="text-sm font-medium text-coffee-200">
-              رمز عبور <span className="text-red-400">*</span>
-            </label>
-            <Link href="/forgot-password" className="text-xs text-coffee-400 hover:text-coffee-200 transition-colors">
-              فراموشی رمز
-            </Link>
+            <label className="text-sm font-medium text-coffee-200">رمز عبور <span className="text-red-400">*</span></label>
+            <Link href="/forgot-password" className="text-xs text-coffee-400 hover:text-coffee-200 transition-colors">فراموشی رمز</Link>
           </div>
           <div className="relative">
             <Lock size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
@@ -90,11 +83,7 @@ export default function LoginPage() {
               className={`w-full h-11 pr-10 pl-10 rounded-xl border bg-white/10 text-white placeholder:text-gray-500 text-sm focus:outline-none focus:ring-2 focus:ring-coffee-400 transition-all ${errors.password ? "border-red-400" : "border-white/20 hover:border-white/40"}`}
               {...register("password")}
             />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-            >
+            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors">
               {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
             </button>
           </div>
@@ -108,10 +97,16 @@ export default function LoginPage() {
 
       <p className="text-center text-sm text-coffee-400 mt-6">
         حساب ندارید؟{" "}
-        <Link href="/register" className="text-coffee-200 hover:text-white font-medium transition-colors">
-          ثبت‌نام کنید
-        </Link>
+        <Link href="/register" className="text-coffee-200 hover:text-white font-medium transition-colors">ثبت‌نام کنید</Link>
       </p>
     </motion.div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="bg-white/5 border border-white/10 rounded-3xl p-8 animate-pulse h-96" />}>
+      <LoginForm />
+    </Suspense>
   );
 }

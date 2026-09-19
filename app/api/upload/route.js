@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 /**
  * POST /api/upload  — آپلود تصویر محصول
  * DELETE /api/upload — حذف تصویر

@@ -19,16 +19,18 @@ export const metadata = {
 export default function HomePage() {
   return (
     <ShopLayout>
-      <HeroSection />
-      <FeaturedCategories />
-      <BestSellers />
-      <SpecialOffers />
-      <CoffeeTypes />
-      <NewProducts />
-      <BrandsBanner />
-      <WhyUs />
-      <Testimonials />
-      <FAQSection />
+      <main>
+        <HeroSection />
+        <FeaturedCategories />
+        <BestSellers />
+        <SpecialOffers />
+        <CoffeeTypes />
+        <NewProducts />
+        <BrandsBanner />
+        <WhyUs />
+        <Testimonials />
+        <FAQSection />
+      </main>
     </ShopLayout>
   );
 }

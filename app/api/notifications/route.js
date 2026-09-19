@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { apiHandler } from "@/lib/apiHandler";
 import { successResponse } from "@/lib/apiResponse";
 import Notification from "@/models/Notification";

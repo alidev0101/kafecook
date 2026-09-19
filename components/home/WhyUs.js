@@ -1,3 +1,5 @@
+"use client";
+
 import { ShieldCheck, Truck, RefreshCw, Headphones, Award, Leaf } from "lucide-react";
 import { motion } from "framer-motion";
 

@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 /**
  * GET  /api/admin/reviews  — لیست نظرات برای ادمین با فیلتر status
  * PATCH /api/admin/reviews  — bulk status update (اختیاری)
