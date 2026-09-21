@@ -100,14 +100,14 @@ export default function ProductCard({ product, className }) {
               <Heart size={14} className={wishlisted ? "fill-white" : ""} />
             </motion.button>
 
-            <Link
+            {/* <Link
               href={`/products/${product.slug}`}
               onClick={(e) => e.stopPropagation()}
               aria-label="مشاهده سریع"
               className="w-8 h-8 rounded-full bg-card/90 backdrop-blur-sm flex items-center justify-center shadow-sm text-muted-foreground hover:bg-card hover:text-foreground transition-all"
             >
               <Eye size={14} />
-            </Link>
+            </Link> */}
           </div>
 
           {/* Out of stock overlay */}

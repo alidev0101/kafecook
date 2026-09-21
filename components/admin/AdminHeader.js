@@ -15,6 +15,9 @@ const pageTitles = {
   "/admin/users": "مدیریت کاربران",
   "/admin/reviews": "مدیریت نظرات",
   "/admin/coupons": "کدهای تخفیف",
+  "/admin/blog": "مدیریت وبلاگ",
+  "/admin/blog/new": "مقاله جدید",
+  "/admin/blog/categories": "دسته‌بندی‌های وبلاگ",
   "/admin/reports": "گزارشات",
   "/admin/settings": "تنظیمات",
 };

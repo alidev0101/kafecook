@@ -10,3 +10,5 @@ export { default as Review } from "./Review";
 export { default as Coupon } from "./Coupon";
 export { default as Payment } from "./Payment";
 export { default as Notification } from "./Notification";
+export { default as Post } from "./Post";
+export { default as BlogCategory } from "./BlogCategory";

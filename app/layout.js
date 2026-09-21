@@ -3,13 +3,6 @@ import { Vazirmatn } from "next/font/google";
 import Providers from "@/components/shared/Providers";
 import { Toaster } from "sonner";
 
-const vazir = Vazirmatn({
-  subsets: ["arabic"],
-  variable: "--font-vazir",
-  display: "swap",
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-});
-
 export const metadata = {
   title: {
     default: "کافه کوک | فروشگاه تخصصی قهوه کرمان",
@@ -41,8 +34,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="fa" dir="rtl" className={vazir.variable} suppressHydrationWarning>
-      <body className={`${vazir.className} antialiased`}>
+    <html lang="fa" dir="rtl" suppressHydrationWarning>
+      <body className={`antialiased`}>
         <Providers>
           {children}
           <Toaster
@@ -50,7 +43,7 @@ export default function RootLayout({ children }) {
             richColors
             expand={false}
             duration={3000}
-            style={{ fontFamily: "Morabba, Vazirmatn, Tahoma, sans-serif" }}
+            className="dana"
           />
         </Providers>
       </body>

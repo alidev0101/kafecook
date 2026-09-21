@@ -9,6 +9,7 @@ import CoffeeTypes from "@/components/home/CoffeeTypes";
 import Testimonials from "@/components/home/Testimonials";
 import WhyUs from "@/components/home/WhyUs";
 import FAQSection from "@/components/home/FAQSection";
+import LatestPosts from "@/components/home/LatestPosts";
 
 export const metadata = {
   title: "کافه کوک | فروشگاه تخصصی قهوه کرمان",
@@ -29,6 +30,7 @@ export default function HomePage() {
         <BrandsBanner />
         <WhyUs />
         <Testimonials />
+        <LatestPosts />
         <FAQSection />
       </main>
     </ShopLayout>

@@ -5,22 +5,23 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, Package, Tag, Award, ShoppingBag,
   Users, Star, Percent, BarChart2, Settings, Coffee,
-  LogOut, ChevronLeft,
+  LogOut, ChevronLeft, BookOpen,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { href: "/admin", icon: LayoutDashboard, label: "داشبورد", exact: true },
-  { href: "/admin/products", icon: Package, label: "محصولات" },
-  { href: "/admin/categories", icon: Tag, label: "دسته‌بندی‌ها" },
-  { href: "/admin/brands", icon: Award, label: "برندها" },
-  { href: "/admin/orders", icon: ShoppingBag, label: "سفارشات" },
-  { href: "/admin/users", icon: Users, label: "کاربران" },
-  { href: "/admin/reviews", icon: Star, label: "نظرات" },
-  { href: "/admin/coupons", icon: Percent, label: "کدهای تخفیف" },
-  { href: "/admin/reports", icon: BarChart2, label: "گزارشات" },
-  { href: "/admin/settings", icon: Settings, label: "تنظیمات" },
+  { href: "/admin",            icon: LayoutDashboard, label: "داشبورد",       exact: true },
+  { href: "/admin/products",   icon: Package,         label: "محصولات"                   },
+  { href: "/admin/categories", icon: Tag,             label: "دسته‌بندی‌ها"              },
+  { href: "/admin/brands",     icon: Award,           label: "برندها"                    },
+  { href: "/admin/orders",     icon: ShoppingBag,     label: "سفارشات"                   },
+  { href: "/admin/users",      icon: Users,           label: "کاربران"                   },
+  { href: "/admin/reviews",    icon: Star,            label: "نظرات"                     },
+  { href: "/admin/coupons",    icon: Percent,         label: "کدهای تخفیف"               },
+  { href: "/admin/blog",       icon: BookOpen,        label: "وبلاگ"                     },
+  { href: "/admin/reports",    icon: BarChart2,       label: "گزارشات"                   },
+  { href: "/admin/settings",   icon: Settings,        label: "تنظیمات"                   },
 ];
 
 export default function AdminSidebar() {

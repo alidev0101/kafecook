@@ -13,6 +13,7 @@ const footerLinks = {
     { href: "/about",   label: "درباره کافه کوک" },
     { href: "/contact", label: "تماس با ما" },
     { href: "/faq",     label: "سوالات متداول" },
+    { href: "/blog",    label: "وبلاگ قهوه" },
   ],
   account: [
     { href: "/login",    label: "ورود به حساب" },

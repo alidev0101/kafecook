@@ -46,6 +46,26 @@ const couponSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+const blogCategorySchema = new mongoose.Schema(
+  { name: String, slug: { type: String, unique: true }, description: String, color: { type: String, default: "#be7040" }, order: { type: Number, default: 0 }, isActive: { type: Boolean, default: true } },
+  { timestamps: true }
+);
+const postSchema2 = new mongoose.Schema(
+  {
+    title: String, slug: { type: String, unique: true }, excerpt: String, content: String,
+    featuredImage: { url: String, alt: String },
+    category: { type: mongoose.Schema.Types.ObjectId, ref: "BlogCategory" },
+    tags: [String], author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    status: { type: String, default: "draft" }, publishedAt: Date, readTime: { type: Number, default: 1 },
+    postType: { type: String, default: "article" }, isFeatured: Boolean,
+    metaTitle: String, metaDescription: String, viewCount: { type: Number, default: 0 },
+  },
+  { timestamps: true }
+);
+
+const BlogCategory = mongoose.models.BlogCategory || mongoose.model("BlogCategory", blogCategorySchema);
+const Post         = mongoose.models.Post         || mongoose.model("Post",         postSchema2);
+
 const User     = mongoose.models.User     || mongoose.model("User",     userSchema);
 const Category = mongoose.models.Category || mongoose.model("Category", categorySchema);
 const Brand    = mongoose.models.Brand    || mongoose.model("Brand",    brandSchema);
@@ -80,7 +100,7 @@ function makeProducts(categories, brands) {
   const illy     = brands.find((b) => b.slug === "illy");
   const kc       = brands.find((b) => b.slug === "kafecook-special");
 
-  const img = (name) => `https://source.unsplash.com/400x400/?coffee,${encodeURIComponent(name)}`;
+  const img = (name) => `https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=400&fit=crop`;
 
   return [
     {
@@ -237,6 +257,8 @@ async function seed() {
       Brand.deleteMany({}),
       Product.deleteMany({}),
       Coupon.deleteMany({}),
+      BlogCategory.deleteMany({}),
+      Post.deleteMany({}),
     ]);
     console.log("✅ پاک شد\n");
 
@@ -312,6 +334,113 @@ async function seed() {
       },
     ]);
     console.log(`   ✅ 3 کد تخفیف ایجاد شد\n`);
+
+    // ── Blog Categories ──
+    console.log("📚 ایجاد دسته‌بندی‌های وبلاگ...");
+    const blogCats = await BlogCategory.insertMany([
+      { name: "آموزش دم‌آوری",   slug: "brewing-guide",   color: "#be7040", order: 1, description: "راهنمای کامل روش‌های مختلف دم‌آوری قهوه" },
+      { name: "معرفی قهوه‌ها",   slug: "coffee-origins",  color: "#92462c", order: 2, description: "آشنایی با انواع قهوه‌های تک‌خاستگاه از سراسر جهان" },
+      { name: "تجهیزات قهوه",   slug: "coffee-equipment", color: "#6b3a1f", order: 3, description: "راهنمای خرید و استفاده از تجهیزات قهوه" },
+      { name: "اخبار قهوه",      slug: "coffee-news",      color: "#4a7c59", order: 4, description: "آخرین اخبار دنیای قهوه" },
+      { name: "سبک زندگی قهوه", slug: "coffee-lifestyle",  color: "#2d6a8f", order: 5, description: "قهوه در زندگی روزمره" },
+    ]);
+    console.log(`   ✅ ${blogCats.length} دسته‌بندی وبلاگ ایجاد شد\n`);
+
+    // ── Blog Posts ──
+    console.log("📝 ایجاد مقالات وبلاگ...");
+    const brewingCat  = blogCats.find((c) => c.slug === "brewing-guide");
+    const originsCat  = blogCats.find((c) => c.slug === "coffee-origins");
+    const equipCat    = blogCats.find((c) => c.slug === "coffee-equipment");
+    const lifestyleCat= blogCats.find((c) => c.slug === "coffee-lifestyle");
+
+    const posts = await Post.insertMany([
+      {
+        title:    "راهنمای کامل دم‌آوری فرنچ پرس در خانه",
+        slug:     "french-press-guide",
+        excerpt:  "فرنچ پرس یکی از ساده‌ترین و در عین حال بهترین روش‌های دم‌آوری قهوه است. در این مقاله همه چیز را به شما آموزش می‌دهیم.",
+        content:  `<h2>فرنچ پرس چیست؟</h2><p>فرنچ پرس (French Press) یکی از محبوب‌ترین روش‌های دم‌آوری قهوه در جهان است که با استفاده از فشار مکانیکی، قهوه را از آب جدا می‌کند.</p><h2>تجهیزات مورد نیاز</h2><ul><li>فرنچ پرس ۳۵۰ میلی‌لیتری یا بزرگ‌تر</li><li>آسیاب قهوه با آسیاب درشت</li><li>دماسنج آب</li><li>ترازو دیجیتال</li></ul><h2>دستور دم‌آوری</h2><p>نسبت قهوه به آب: <strong>۱۵ گرم قهوه به ازای ۲۵۰ میلی‌لیتر آب</strong></p><ol><li>آب را تا دمای ۹۳-۹۵ درجه سانتیگراد گرم کنید</li><li>قهوه را با آسیاب درشت آسیاب کنید</li><li>قهوه را در فرنچ پرس بریزید</li><li>آب گرم را روی قهوه بریزید و هم بزنید</li><li>۴ دقیقه صبر کنید</li><li>پیستون را آرام فشار دهید و سرو کنید</li></ol><blockquote>نکته: قهوه‌ای با اسیدیته متوسط و بادی بالا بهترین انتخاب برای فرنچ پرس است.</blockquote>`,
+        category: brewingCat._id,
+        author:   admin._id,
+        status:   "published",
+        publishedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+        readTime: 5,
+        postType: "tutorial",
+        isFeatured: true,
+        tags: ["فرنچ پرس", "آموزش", "دم‌آوری"],
+        metaTitle: "راهنمای کامل دم‌آوری فرنچ پرس | کافه کوک",
+        metaDescription: "یاد بگیرید چطور با فرنچ پرس بهترین قهوه را در خانه دم بکشید. راهنمای گام به گام با نکات حرفه‌ای.",
+        viewCount: 342,
+      },
+      {
+        title:    "آشنایی با قهوه اتیوپی؛ مهد قهوه جهان",
+        slug:     "ethiopia-coffee-origin",
+        excerpt:  "اتیوپی زادگاه قهوه است. از مناطق یرگاچف و سیدامو تا جیما — هر منطقه داستان و طعم منحصربه‌فرد خود را دارد.",
+        content:  `<h2>اتیوپی؛ جایی که قهوه متولد شد</h2><p>طبق افسانه‌های تاریخی، کالدی، چوپانی در اتیوپی، اولین کسی بود که متوجه خواص انرژی‌بخش قهوه شد وقتی بزهایش پس از خوردن دانه‌های قهوه بسیار شاد و پرانرژی شدند.</p><h2>مناطق اصلی کشت قهوه در اتیوپی</h2><h3>یرگاچف (Yirgacheffe)</h3><p>مشهورترین منطقه قهوه اتیوپی. قهوه‌های یرگاچف با عطر گل یاسمن، طعم توت‌فرنگی و اسیدیته روشن شناخته می‌شوند. این قهوه‌ها معمولاً به روش Washed پردازش می‌شوند.</p><h3>سیدامو (Sidamo)</h3><p>منطقه‌ای وسیع با تنوع طعمی زیاد. قهوه‌های سیدامو می‌توانند طعم‌های میوه‌ای، گلی یا حتی شکلاتی داشته باشند.</p><h3>جیما (Jimma)</h3><p>قهوه‌های جیما معمولاً ارزان‌تر و با طعم‌های زمینی و ادویه‌ای هستند. بیشتر در مخلوط‌های تجاری استفاده می‌شوند.</p>`,
+        category: originsCat._id,
+        author:   admin._id,
+        status:   "published",
+        publishedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
+        readTime: 7,
+        postType: "article",
+        isFeatured: true,
+        tags: ["اتیوپی", "تک‌خاستگاه", "تاریخ قهوه", "یرگاچف"],
+        metaTitle: "قهوه اتیوپی؛ مهد قهوه جهان | کافه کوک",
+        metaDescription: "با مناطق اصلی کشت قهوه در اتیوپی آشنا شوید. از یرگاچف تا سیدامو — هر منطقه طعم متفاوتی دارد.",
+        viewCount: 218,
+      },
+      {
+        title:    "بهترین آسیاب‌های قهوه خانگی ۱۴۰۳",
+        slug:     "best-coffee-grinders-2024",
+        excerpt:  "آسیاب قهوه مهم‌ترین تجهیزی است که کیفیت فنجان قهوه شما را تعیین می‌کند. ۵ آسیاب برتر را معرفی می‌کنیم.",
+        content:  `<h2>چرا آسیاب قهوه اینقدر مهم است؟</h2><p>حتی بهترین دان قهوه هم با آسیاب نادرست خراب می‌شود. یکنواختی اندازه ذرات قهوه مستقیماً روی استخراج و طعم نهایی تأثیر می‌گذارد.</p><h2>انواع آسیاب</h2><h3>آسیاب پره‌ای (Blade Grinder)</h3><p>ارزان‌ترین گزینه. اما به دلیل آسیاب ناهموار، برای قهوه تخصصی توصیه نمی‌شود.</p><h3>آسیاب بر (Burr Grinder)</h3><p>انتخاب حرفه‌ای‌ها. دو نوع دارد: فلت‌بر (Flat Burr) و مخروطی (Conical Burr).</p><h2>پنج آسیاب برتر برای خانه</h2><ol><li><strong>Comandante C40</strong> — بهترین آسیاب دستی بازار</li><li><strong>Baratza Encore</strong> — بهترین برای مبتدیان</li><li><strong>Niche Zero</strong> — پرفروش‌ترین آسیاب تک‌دوز</li><li><strong>Timemore Chestnut C2</strong> — بهترین ارزش برای پول</li><li><strong>1Zpresso JX-Pro</strong> — بهترین دستی برای اسپرسو</li></ol>`,
+        category: equipCat._id,
+        author:   admin._id,
+        status:   "published",
+        publishedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+        readTime: 6,
+        postType: "product_review",
+        isFeatured: false,
+        tags: ["آسیاب قهوه", "تجهیزات", "راهنمای خرید"],
+        metaTitle: "بهترین آسیاب قهوه خانگی ۱۴۰۳ | کافه کوک",
+        metaDescription: "مقایسه ۵ آسیاب برتر برای قهوه خانگی. از آسیاب دستی تا برقی — هر چیزی که باید بدانید.",
+        viewCount: 156,
+      },
+      {
+        title:    "چطور با قهوه روز بهتری داشته باشیم؟",
+        slug:     "coffee-better-day",
+        excerpt:  "قهوه فقط یک نوشیدنی نیست — یک آیین است. چطور این آیین را به بهترین شکل تجربه کنیم؟",
+        content:  `<h2>قهوه به عنوان یک آیین صبحگاهی</h2><p>مطالعات نشان می‌دهد که داشتن یک روتین صبحگاهی مشخص، از جمله دم‌کردن قهوه، می‌تواند سطح استرس را کاهش دهد و تمرکز را بهبود بخشد.</p><h2>بهترین زمان نوشیدن قهوه</h2><p>بر اساس تحقیقات علمی، بهترین زمان برای نوشیدن قهوه بین <strong>۹:۳۰ تا ۱۱:۳۰ صبح</strong> است — وقتی سطح کورتیزول طبیعی بدن کمی پایین‌تر از اوج صبحگاهی است.</p><h2>چند نکته برای لذت بیشتر از قهوه</h2><ul><li>قهوه را تازه آسیاب کنید</li><li>آب با کیفیت استفاده کنید</li><li>دمای صحیح را رعایت کنید (۹۲-۹۵ درجه)</li><li>از ظرف تمیز استفاده کنید</li><li>قهوه را بدون حواس‌پرتی بنوشید</li></ul>`,
+        category: lifestyleCat._id,
+        author:   admin._id,
+        status:   "published",
+        publishedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+        readTime: 4,
+        postType: "article",
+        isFeatured: false,
+        tags: ["سبک زندگی", "قهوه صبحگاهی", "نکات قهوه"],
+        metaTitle: "چطور با قهوه روز بهتری داشته باشیم | کافه کوک",
+        metaDescription: "قهوه فقط کافئین نیست — یک تجربه است. بیاموزید چطور از هر فنجان قهوه بیشترین لذت را ببرید.",
+        viewCount: 89,
+      },
+      {
+        title:    "کولد برو در خانه؛ راهنمای گام به گام",
+        slug:     "cold-brew-at-home",
+        excerpt:  "کولد برو خانگی ساده‌تر از آنی است که فکر می‌کنید. با این راهنما، در ۱۲ ساعت یک کولد برو عالی آماده کنید.",
+        content:  `<h2>کولد برو چیست؟</h2><p>کولد برو (Cold Brew) قهوه‌ای است که با آب سرد یا دمای اتاق، طی ۱۲ تا ۲۴ ساعت دم می‌کشد. نتیجه: قهوه‌ای شیرین، ملایم و با تلخی بسیار کم.</p><h2>چرا کولد برو؟</h2><ul><li>اسیدیته خیلی کمتر از قهوه معمولی</li><li>برای معده حساس مناسب‌تر است</li><li>تا ۲ هفته در یخچال نگه می‌ماند</li><li>می‌توان آن را بیشتر رقیق کرد</li></ul><h2>دستور ساخت کولد برو</h2><p><strong>نسبت:</strong> ۱۰۰ گرم قهوه به ازای ۱ لیتر آب</p><ol><li>قهوه را با آسیاب درشت آسیاب کنید</li><li>قهوه و آب سرد را در یک ظرف شیشه‌ای مخلوط کنید</li><li>هم بزنید تا همه قهوه خیس شود</li><li>در ظرف را ببندید و ۱۲-۲۴ ساعت در یخچال بگذارید</li><li>با یک صافی دو لایه صاف کنید</li><li>با یخ سرو کنید یا در بطری نگه دارید</li></ol>`,
+        category: brewingCat._id,
+        author:   admin._id,
+        status:   "published",
+        publishedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+        readTime: 4,
+        postType: "brewing_guide",
+        isFeatured: false,
+        tags: ["کولد برو", "آموزش", "تابستانی", "دم‌آوری سرد"],
+        metaTitle: "کولد برو خانگی؛ راهنمای گام به گام | کافه کوک",
+        metaDescription: "چطور در خانه کولد برو درست کنیم؟ راهنمای کامل با نسبت‌های دقیق و نکات حرفه‌ای.",
+        viewCount: 201,
+      },
+    ]);
+    console.log(`   ✅ ${posts.length} مقاله وبلاگ ایجاد شد\n`);
 
     console.log("━".repeat(50));
     console.log("🎉 Seed با موفقیت انجام شد!\n");
