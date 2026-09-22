@@ -104,7 +104,6 @@ const couponSchema = new mongoose.Schema(
 );
 
 // Indexes
-couponSchema.index({ code: 1 });
 couponSchema.index({ isActive: 1 });
 couponSchema.index({ endDate: 1 });
 

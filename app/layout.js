@@ -4,6 +4,7 @@ import Providers from "@/components/shared/Providers";
 import { Toaster } from "sonner";
 
 export const metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL),
   title: {
     default: "کافه کوک | فروشگاه تخصصی قهوه کرمان",
     template: "%s | کافه کوک",

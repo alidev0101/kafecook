@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import slugify from "slugify";
+import BlogCategory from "./BlogCategory";
 
 const postSchema = new mongoose.Schema(
   {
