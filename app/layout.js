@@ -3,9 +3,11 @@ import { Vazirmatn } from "next/font/google";
 import Providers from "@/components/shared/Providers";
 import { Toaster } from "sonner";
 
+const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+
 export const metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL),
-  title: {
+  metadataBase: appUrl ? new URL(appUrl) : undefined,
+  title: {  
     default: "کافه کوک | فروشگاه تخصصی قهوه کرمان",
     template: "%s | کافه کوک",
   },
