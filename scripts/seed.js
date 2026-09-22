@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 require("dotenv").config({ path: ".env.local" });
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/kafecook";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://andrechang1_db_user:nzLbsFYeRZgmYpJB@clusterkafecook.z4uqp7z.mongodb.net/?appName=ClusterKafeCook";
 
 // ─── Schemas (inline for standalone script) ────────────────────────────────
 
