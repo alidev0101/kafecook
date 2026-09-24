@@ -1,7 +1,7 @@
 import "./globals.css";
-import { Vazirmatn } from "next/font/google";
 import Providers from "@/components/shared/Providers";
 import { Toaster } from "sonner";
+import TopLoader from "@/components/layout/TopLoader";
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL;
 
@@ -16,17 +16,16 @@ export const metadata = {
   description:
     "کافه کوک، بهترین فروشگاه آنلاین قهوه در کرمان. خرید انواع قهوه تخصصی، دان قهوه، قهوه آسیاب شده با بهترین کیفیت و قیمت مناسب.",
 
-  keywords: [
-    "قهوه",
-    "کافه کوک",
-    "کرمان",
-    "دان قهوه",
-    "اسپرسو",
-    "coffee",
-  ],
+  keywords: ["قهوه", "کافه کوک", "کرمان", "دان قهوه", "اسپرسو", "coffee"],
 
   authors: [{ name: "کافه کوک" }],
   creator: "کافه کوک",
+
+  icons: {
+    icon: "/icons/icon-72x72.png",
+    shortcut: "/icons/icon-72x72.png",
+    apple: "/icons/icon-72x72.png",
+  },
 
   openGraph: {
     type: "website",
@@ -63,6 +62,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="fa" dir="rtl" suppressHydrationWarning>
       <body className={`antialiased`}>
+        <TopLoader />
         <Providers>
           {children}
           <Toaster

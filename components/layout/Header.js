@@ -7,8 +7,18 @@ import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ShoppingCart, Heart, Search, Menu, X, User, LogOut,
-  Package, MapPin, ChevronDown, Coffee, LayoutDashboard,
+  ShoppingCart,
+  Heart,
+  Search,
+  Menu,
+  X,
+  User,
+  LogOut,
+  Package,
+  MapPin,
+  ChevronDown,
+  Coffee,
+  LayoutDashboard,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCartStore } from "@/store/cartStore";
@@ -16,24 +26,29 @@ import ThemeToggle from "@/components/shared/ThemeToggle";
 import SearchBar from "@/components/shared/SearchBar";
 
 const navLinks = [
-  { href: "/",           label: "خانه" },
-  { href: "/products",   label: "محصولات" },
+  { href: "/", label: "خانه" },
+  { href: "/products", label: "محصولات" },
   { href: "/categories", label: "دسته‌بندی‌ها" },
-  { href: "/brands",     label: "برندها" },
-  { href: "/blog",       label: "وبلاگ" },
-  { href: "/about",      label: "درباره ما" },
-  { href: "/contact",    label: "تماس" },
+  { href: "/brands", label: "برندها" },
+  { href: "/blog", label: "وبلاگ" },
+  { href: "/about", label: "درباره ما" },
+  { href: "/contact", label: "تماس" },
 ];
 
 export default function Header() {
-  const [scrolled,     setScrolled]     = useState(false);
-  const [mobileOpen,   setMobileOpen]   = useState(false);
-  const [searchOpen,   setSearchOpen]   = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const { data: session } = useSession();
   const pathname = usePathname();
   const userMenuRef = useRef(null);
-  const itemsCount = useCartStore((s) => s.itemsCount);
+  const itemsCount = useCartStore((s) => s.getItemsCount());
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   /* scroll listener */
   useEffect(() => {
@@ -54,7 +69,9 @@ export default function Header() {
   }, []);
 
   /* close mobile on route change */
-  useEffect(() => { setMobileOpen(false); }, [pathname]);
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
 
   const isActive = (href) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -71,9 +88,11 @@ export default function Header() {
       >
         <div className="container-custom">
           <div className="flex items-center justify-between gap-3">
-
             {/* ── Logo ── */}
-            <Link href="/" className="flex items-center gap-2 flex-shrink-0 group">
+            <Link
+              href="/"
+              className="flex items-center gap-2 flex-shrink-0 group"
+            >
               <div className="w-9 h-9 rounded-xl bg-coffee-gradient flex items-center justify-center shadow-warm group-hover:shadow-warm-lg transition-shadow">
                 <Coffee size={18} className="text-white" />
               </div>
@@ -91,7 +110,10 @@ export default function Header() {
             </Link>
 
             {/* ── Desktop Nav ── */}
-            <nav className="hidden lg:flex items-center gap-0.5" aria-label="ناوبری اصلی">
+            <nav
+              className="hidden lg:flex items-center gap-0.5"
+              aria-label="ناوبری اصلی"
+            >
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -147,7 +169,7 @@ export default function Header() {
               >
                 <ShoppingCart size={19} />
                 <AnimatePresence>
-                  {itemsCount > 0 && (
+                  {mounted && itemsCount > 0 && (
                     <motion.span
                       key="cart-badge"
                       initial={{ scale: 0 }}
@@ -180,7 +202,10 @@ export default function Header() {
                           className="object-cover"
                         />
                       ) : (
-                        <User size={14} className="text-coffee-600 dark:text-coffee-400" />
+                        <User
+                          size={14}
+                          className="text-coffee-600 dark:text-coffee-400"
+                        />
                       )}
                     </div>
                     <span className="hidden md:block text-sm font-medium text-foreground max-w-[72px] truncate">
@@ -206,14 +231,26 @@ export default function Header() {
                       >
                         {/* User info */}
                         <div className="px-4 py-2.5 border-b border-border mb-1">
-                          <p className="text-sm font-semibold text-foreground truncate">{session.user.name}</p>
-                          <p className="text-xs text-muted-foreground truncate">{session.user.email}</p>
+                          <p className="text-sm font-semibold text-foreground truncate">
+                            {session.user.name}
+                          </p>
+                          <p className="text-xs text-muted-foreground truncate">
+                            {session.user.email}
+                          </p>
                         </div>
 
                         {[
-                          { href: "/profile",   icon: User,    label: "پروفایل من" },
-                          { href: "/orders",    icon: Package, label: "سفارش‌هایم" },
-                          { href: "/addresses", icon: MapPin,  label: "آدرس‌هایم" },
+                          { href: "/profile", icon: User, label: "پروفایل من" },
+                          {
+                            href: "/orders",
+                            icon: Package,
+                            label: "سفارش‌هایم",
+                          },
+                          {
+                            href: "/addresses",
+                            icon: MapPin,
+                            label: "آدرس‌هایم",
+                          },
                         ].map(({ href, icon: Icon, label }) => (
                           <Link
                             key={href}
@@ -242,7 +279,10 @@ export default function Header() {
 
                         <div className="border-t border-border my-1" />
                         <button
-                          onClick={() => { signOut({ callbackUrl: "/" }); setUserMenuOpen(false); }}
+                          onClick={() => {
+                            signOut({ callbackUrl: "/" });
+                            setUserMenuOpen(false);
+                          }}
                           className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                         >
                           <LogOut size={15} />
@@ -316,7 +356,12 @@ export default function Header() {
                     </motion.div>
                   ))}
                   {!session && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="pt-2">
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.3 }}
+                      className="pt-2"
+                    >
                       <Link
                         href="/login"
                         className="flex items-center justify-center gap-2 mx-1 px-4 py-2.5 bg-coffee-600 text-white text-sm font-medium rounded-xl"

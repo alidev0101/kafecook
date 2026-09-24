@@ -100,7 +100,7 @@ function makeProducts(categories, brands) {
   const illy     = brands.find((b) => b.slug === "illy");
   const kc       = brands.find((b) => b.slug === "kafecook-special");
 
-  const img = (name) => `https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=400&fit=crop`;
+  const img = () => "";
 
   return [
     {

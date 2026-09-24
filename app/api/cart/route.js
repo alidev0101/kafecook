@@ -3,6 +3,7 @@ import { apiHandler } from "@/lib/apiHandler";
 import { successResponse, errorResponse } from "@/lib/apiResponse";
 import Cart from "@/models/Cart";
 import Product from "@/models/Product";
+import Coupon from "@/models/Coupon";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import connectDB from "@/lib/mongodb";

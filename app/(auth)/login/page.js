@@ -9,15 +9,17 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Mail, Lock, ArrowLeft } from "lucide-react";
+import { useCartStore } from "@/store/cartStore";
 import { toast } from "sonner";
 import { loginSchema } from "@/validations/auth";
 import Button from "@/components/ui/Button";
 
 function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading]           = useState(false);
-  const router                          = useRouter();
-  const callbackUrl                     = useSearchParams().get("callbackUrl") || "/";
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const callbackUrl = useSearchParams().get("callbackUrl") || "/";
+  const fetchCart = useCartStore((state) => state.fetchCart);
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(loginSchema),
@@ -30,6 +32,7 @@ function LoginForm() {
       if (result?.error) {
         toast.error(result.error || "ایمیل یا رمز عبور اشتباه است");
       } else {
+        await fetchCart();
         toast.success("خوش آمدید!");
         router.push(callbackUrl);
         router.refresh();

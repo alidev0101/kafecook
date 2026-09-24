@@ -10,12 +10,23 @@ import { formatPrice, formatNumber } from "@/lib/utils";
 import Breadcrumb from "@/components/shared/Breadcrumb";
 
 export default function CartPage() {
-  const { items, subtotal, total, discountAmount, coupon, clearCart } = useCartStore();
+  const items = useCartStore((state) => state.items);
+  const discountAmount = useCartStore((state) => state.discountAmount);
+  const coupon = useCartStore((state) => state.coupon);
+  const clearCart = useCartStore((state) => state.clearCart);
+
   const FREE_THRESHOLD = 500000;
+
+  const itemsCount = items.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
+
+  const subtotal = items.reduce((sum, item) => sum + Number(item.price || 0) * Number(item.quantity || 0), 0);
+
   const shippingCost = subtotal >= FREE_THRESHOLD || subtotal === 0 ? 0 : 35000;
-  const finalTotal = total + shippingCost;
-  const remaining = FREE_THRESHOLD - subtotal;
-  const itemsCount = items.reduce((s, i) => s + i.quantity, 0);
+
+  const finalTotal = Math.max(0, subtotal - Number(discountAmount || 0) + shippingCost);
+
+  const remaining = Math.max(0, FREE_THRESHOLD - subtotal);
+
 
   return (
     <div className="bg-background min-h-screen">

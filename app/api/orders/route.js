@@ -87,37 +87,59 @@ export const POST = apiHandler(
     const orderItems = [];
 
     if (cartItemsRaw) {
-      // از DB cart
       for (const item of cartItemsRaw) {
         const product = item.product;
+
         if (!product || !product.isActive) {
-          return errorResponse(
-            `محصول "${item.productSnapshot?.name || "ناشناخته"}" موجود نیست`,
-            400
-          );
+          return errorResponse(`محصول "${item.productSnapshot?.name || "ناشناخته"}" موجود نیست`, 400);
         }
 
-        if (item.variantId) {
+        let finalPrice;
+        let comparePrice = null;
+        let variantId = item.variantId || null;
+
+        if (variantId) {
           const variant = product.variants.find(
-            (v) => v._id.toString() === item.variantId.toString()
+            (v) => v._id.toString() === variantId.toString()
           );
+
           if (!variant || variant.stock < item.quantity) {
-            return errorResponse(
-              `موجودی کافی برای "${product.name}" وجود ندارد`,
-              400
-            );
+            return errorResponse(`موجودی کافی برای "${product.name}" وجود ندارد`, 400);
           }
+
+          finalPrice = variant.price;
+          comparePrice = variant.comparePrice || null;
+        } else if (product.variants?.length > 0) {
+          const variant = product.variants[0];
+
+          if (variant.stock < item.quantity) {
+            return errorResponse(`موجودی کافی برای "${product.name}" وجود ندارد`, 400);
+          }
+
+          finalPrice = variant.price;
+          comparePrice = variant.comparePrice || null;
+          variantId = variant._id;
+        } else {
+          if (product.stock < item.quantity) {
+            return errorResponse(`موجودی کافی برای "${product.name}" وجود ندارد`, 400);
+          }
+
+          finalPrice = product.basePrice;
+          comparePrice = product.comparePrice || null;
         }
 
         orderItems.push({
           product: product._id,
-          variantId: item.variantId || null,
+          variantId,
           quantity: item.quantity,
-          price: item.price,
-          comparePrice: item.comparePrice || null,
+          price: finalPrice,
+          comparePrice,
           productSnapshot: {
             name: product.name,
-            image: product.images?.find((i) => i.isPrimary)?.url || product.images?.[0]?.url || null,
+            image:
+              product.images?.find((i) => i.isPrimary)?.url ||
+              product.images?.[0]?.url ||
+              null,
             slug: product.slug,
             weightLabel: item.productSnapshot?.weightLabel || null,
             grindLabel: item.productSnapshot?.grindLabel || null,
@@ -125,11 +147,11 @@ export const POST = apiHandler(
         });
       }
     } else {
-      // Fallback از clientItems — validate هر محصول را از DB بگیر
       for (const clientItem of body.clientItems) {
-        if (!clientItem.productId || !clientItem.price || !clientItem.quantity) continue;
+        if (!clientItem.productId || !clientItem.quantity) continue;
 
         const product = await Product.findById(clientItem.productId).lean();
+
         if (!product || !product.isActive) {
           return errorResponse(
             `محصول "${clientItem.productSnapshot?.name || "ناشناخته"}" موجود نیست`,
@@ -137,38 +159,48 @@ export const POST = apiHandler(
           );
         }
 
-        let finalPrice = clientItem.price;
+        let finalPrice;
         let variantId = clientItem.variantId || null;
 
         if (variantId) {
           const variant = product.variants.find(
             (v) => v._id.toString() === variantId.toString()
           );
+
           if (!variant || variant.stock < clientItem.quantity) {
-            return errorResponse(
-              `موجودی کافی برای "${product.name}" وجود ندارد`,
-              400
-            );
+            return errorResponse(`موجودی کافی برای "${product.name}" وجود ندارد`, 400);
           }
-          // از قیمت واقعی variant (نه client) استفاده کن
+
           finalPrice = variant.price;
         } else if (product.variants?.length > 0) {
-          const fv = product.variants[0];
-          finalPrice = fv.price;
-          variantId = fv._id;
+          const variant = product.variants[0];
+
+          if (variant.stock < clientItem.quantity) {
+            return errorResponse(`موجودی کافی برای "${product.name}" وجود ندارد`, 400);
+          }
+
+          finalPrice = variant.price;
+          variantId = variant._id;
         } else {
+          if (product.stock < clientItem.quantity) {
+            return errorResponse(`موجودی کافی برای "${product.name}" وجود ندارد`, 400);
+          }
+
           finalPrice = product.basePrice;
         }
 
         orderItems.push({
           product: product._id,
-          variantId: variantId || null,
+          variantId,
           quantity: parseInt(clientItem.quantity),
           price: finalPrice,
           comparePrice: null,
           productSnapshot: {
             name: product.name,
-            image: product.images?.find((i) => i.isPrimary)?.url || product.images?.[0]?.url || null,
+            image:
+              product.images?.find((i) => i.isPrimary)?.url ||
+              product.images?.[0]?.url ||
+              null,
             slug: product.slug,
             weightLabel: clientItem.productSnapshot?.weightLabel || null,
             grindLabel: clientItem.productSnapshot?.grindLabel || null,
@@ -185,8 +217,7 @@ export const POST = apiHandler(
     const subtotal = orderItems.reduce((s, i) => s + i.price * i.quantity, 0);
 
     const shippingCosts = { standard: 35000, express: 70000, pickup: 0 };
-    const shippingCost =
-      subtotal >= 500000 ? 0 : shippingCosts[shippingMethod] ?? 35000;
+    const shippingCost = subtotal >= 500000 ? 0 : shippingCosts[shippingMethod] ?? 35000;
 
     // ─── 5. Coupon ──────────────────────────────────────────────────────
     let discountAmount = 0;
@@ -212,8 +243,11 @@ export const POST = apiHandler(
       pickup: "دریافت حضوری",
     };
 
+    const orderNumber = `ORD-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`;
+
     // ─── 6. Create order ─────────────────────────────────────────────────
     const order = await Order.create({
+      orderNumber,
       user: req.user.id,
       items: orderItems,
       shippingAddress: {
@@ -238,50 +272,70 @@ export const POST = apiHandler(
       couponCode: couponDoc ? couponCode.toUpperCase() : null,
       total,
       paymentMethod: paymentMethod || "online",
+      paymentStatus: paymentMethod === "online" ? "unpaid" : "pending",
       notes: notes || "",
       statusHistory: [{ status: "pending", note: "سفارش ثبت شد" }],
     });
 
-    // ─── 7. Update stock ─────────────────────────────────────────────────
-    for (const item of orderItems) {
-      if (item.variantId) {
-        await Product.findOneAndUpdate(
-          { _id: item.product, "variants._id": item.variantId },
-          {
+    // از اینجا به بعد توی callback 
+    if (paymentMethod === "cod") {
+      // کاهش موجودی
+      for (const item of orderItems) {
+        if (item.variantId) {
+          await Product.findOneAndUpdate(
+            { _id: item.product, "variants._id": item.variantId },
+            {
+              $inc: {
+                "variants.$.stock": -item.quantity,
+                soldCount: item.quantity,
+              },
+            }
+          );
+        } else {
+          await Product.findByIdAndUpdate(item.product, {
             $inc: {
-              "variants.$.stock": -item.quantity,
               soldCount: item.quantity,
             },
-          }
-        );
-      } else {
-        // اگر variant نداشت، فقط soldCount را زیاد کن
-        await Product.findByIdAndUpdate(item.product, {
-          $inc: { soldCount: item.quantity },
-        });
+          });
+        }
       }
+
+      // ثبت مصرف کوپن
+      if (couponDoc) {
+        couponDoc.usedCount += 1;
+        couponDoc.usedBy.push({
+          user: req.user.id,
+          orderId: order._id,
+        });
+        await couponDoc.save();
+      }
+
+      // پاک کردن سبد
+      await Cart.findOneAndDelete({
+        user: req.user.id,
+      });
+
+      // اعلان
+      await Notification.create({
+        user: req.user.id,
+        type: "order_new",
+        title: "سفارش ثبت شد",
+        message: `سفارش شما با شماره ${order.orderNumber} با موفقیت ثبت شد`,
+        link: `/orders/${order._id}`,
+        relatedModel: "Order",
+        relatedId: order._id,
+      });
+
+      return successResponse(
+        {
+          orderId: order._id.toString(),
+          orderNumber: order.orderNumber,
+          total: order.total,
+        },
+        "سفارش شما با موفقیت ثبت شد",
+        201
+      );
     }
-
-    // ─── 8. Coupon usage ─────────────────────────────────────────────────
-    if (couponDoc) {
-      couponDoc.usedCount += 1;
-      couponDoc.usedBy.push({ user: req.user.id, orderId: order._id });
-      await couponDoc.save();
-    }
-
-    // ─── 9. Clear cart ──────────────────────────────────────────────────
-    await Cart.findOneAndDelete({ user: req.user.id });
-
-    // ─── 10. Notification ────────────────────────────────────────────────
-    await Notification.create({
-      user: req.user.id,
-      type: "order_new",
-      title: "سفارش ثبت شد",
-      message: `سفارش شما با شماره ${order.orderNumber} با موفقیت ثبت شد`,
-      link: `/orders/${order._id}`,
-      relatedModel: "Order",
-      relatedId: order._id,
-    });
 
     return successResponse(
       {
@@ -289,9 +343,10 @@ export const POST = apiHandler(
         orderNumber: order.orderNumber,
         total: order.total,
       },
-      "سفارش با موفقیت ثبت شد",
+      "سفارش ایجاد شد",
       201
     );
+
   },
   { requireAuth: true }
 );

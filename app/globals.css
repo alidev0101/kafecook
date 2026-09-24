@@ -219,6 +219,25 @@
   .admin-nav-link.active {
     @apply bg-coffee-600 text-white hover:bg-coffee-700 hover:text-white;
   }
+
+  #nprogress {
+    pointer-events: none;
+  }
+
+  #nprogress .bar {
+    background: #92462c !important;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    border-radius: 10px;
+  }
+
+  #nprogress .peg {
+    display: none;
+  }
 }
 
 /* ─── Utilities ──────────────────────────────────────────────────────── */
