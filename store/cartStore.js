@@ -23,18 +23,13 @@ export const useCartStore = create(
         ),
 
       getTotal: () =>
-        Math.max(
-          0,
-          get().getSubtotal() - Number(get().discountAmount || 0)
-        ),
+        Math.max(0, get().getSubtotal() - Number(get().discountAmount || 0)),
 
       addItem(item) {
         set((state) => {
           const variantId = item.variantId || null;
           const index = state.items.findIndex(
-            (i) =>
-              i.productId === item.productId &&
-              i.variantId === variantId
+            (i) => i.productId === item.productId && i.variantId === variantId
           );
 
           if (index !== -1) {
@@ -102,7 +97,7 @@ export const useCartStore = create(
           discountAmount: 0,
         });
 
-        axios.delete("/api/cart").catch(() => { });
+        axios.delete("/api/cart").catch(() => {});
       },
 
       applyCoupon(coupon, discountAmount) {
@@ -165,10 +160,7 @@ export const useCartStore = create(
           // await get().fetchCart();
         } catch (err) {
           if (err?.response?.status !== 401) {
-            console.warn(
-              "Cart sync failed:",
-              err?.response?.data?.message
-            );
+            console.warn("Cart sync failed:", err?.response?.data?.message);
           }
         }
       },
@@ -186,7 +178,7 @@ export const useCartStore = create(
           items: (serverCart?.items || []).map((item) => ({
             id:
               item._id?.toString() ||
-              `${item.product}-${item.variantId || "default"}-${Date.now()}`,
+              `${item.product}-${item.variantId || "default"}`,
 
             productId:
               typeof item.product === "string"
@@ -199,15 +191,12 @@ export const useCartStore = create(
 
             price: Number(item.price || 0),
 
-            comparePrice: item.comparePrice
-              ? Number(item.comparePrice)
-              : null,
+            comparePrice: item.comparePrice ? Number(item.comparePrice) : null,
 
             productSnapshot: item.productSnapshot || {},
           })),
 
           discountAmount: Number(serverCart?.discountAmount || 0),
-
           coupon: serverCart?.coupon || null,
         });
       },

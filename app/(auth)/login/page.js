@@ -68,6 +68,7 @@ function LoginForm() {
               type="email" dir="ltr" placeholder="example@email.com"
               className={`w-full h-11 pr-10 pl-4 rounded-xl border bg-white/10 text-white placeholder:text-gray-500 text-sm focus:outline-none focus:ring-2 focus:ring-coffee-400 transition-all ${errors.email ? "border-red-400" : "border-white/20 hover:border-white/40"}`}
               {...register("email")}
+              defaultValue={"admin@kafecook.ir"}
             />
           </div>
           {errors.email && <p className="text-xs text-red-400 mt-1">{errors.email.message}</p>}
@@ -85,6 +86,7 @@ function LoginForm() {
               placeholder="رمز عبور خود را وارد کنید"
               className={`w-full h-11 pr-10 pl-10 rounded-xl border bg-white/10 text-white placeholder:text-gray-500 text-sm focus:outline-none focus:ring-2 focus:ring-coffee-400 transition-all ${errors.password ? "border-red-400" : "border-white/20 hover:border-white/40"}`}
               {...register("password")}
+              defaultValue={"Admin@123456"}
             />
             <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors">
               {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}

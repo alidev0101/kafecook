@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 import { apiHandler } from "@/lib/apiHandler";
 import { successResponse, errorResponse } from "@/lib/apiResponse";
 import Cart from "@/models/Cart";
@@ -18,10 +18,17 @@ async function getCartFilter(req) {
   return null;
 }
 
-// GET /api/cart
 export const GET = apiHandler(async (req) => {
   const filter = await getCartFilter(req);
-  if (!filter) return successResponse({ items: [], subtotal: 0, total: 0, itemsCount: 0 });
+
+  if (!filter) {
+    return successResponse({
+      items: [],
+      subtotal: 0,
+      total: 0,
+      itemsCount: 0,
+    });
+  }
 
   const cart = await Cart.findOne(filter)
     .populate({
@@ -31,16 +38,66 @@ export const GET = apiHandler(async (req) => {
     .populate("coupon", "code type value")
     .lean();
 
-  if (!cart) return successResponse({ items: [], subtotal: 0, total: 0, itemsCount: 0 });
+  if (!cart) {
+    return successResponse({
+      items: [],
+      subtotal: 0,
+      total: 0,
+      itemsCount: 0,
+    });
+  }
 
-  // Calculate totals
-  const subtotal = cart.items.reduce((s, i) => s + i.price * i.quantity, 0);
-  const total = Math.max(0, subtotal - (cart.discountAmount || 0));
-  const itemsCount = cart.items.reduce((s, i) => s + i.quantity, 0);
+  const items = cart.items.map((item) => {
+    const product = item.product;
+    const snapshot = item.productSnapshot || {};
 
-  return successResponse({ ...cart, subtotal, total, itemsCount });
+    const variant = product?.variants?.find(
+      (v) => v._id?.toString() === item.variantId?.toString()
+    );
+
+    return {
+      ...item,
+
+      productSnapshot: {
+        name: snapshot.name || product?.name || "",
+        image:
+          snapshot.image ||
+          product?.images?.find((img) => img.isPrimary)?.url ||
+          product?.images?.[0]?.url ||
+          null,
+        slug: snapshot.slug || product?.slug || "",
+        weightLabel:
+          snapshot.weightLabel || variant?.weightLabel || "",
+        grindLabel:
+          snapshot.grindLabel || variant?.grindLabel || "",
+      },
+    };
+  });
+
+  const subtotal = items.reduce(
+    (sum, item) =>
+      sum + Number(item.price || 0) * Number(item.quantity || 0),
+    0
+  );
+
+  const total = Math.max(
+    0,
+    subtotal - Number(cart.discountAmount || 0)
+  );
+
+  const itemsCount = items.reduce(
+    (sum, item) => sum + Number(item.quantity || 0),
+    0
+  );
+
+  return successResponse({
+    ...cart,
+    items,
+    subtotal,
+    total,
+    itemsCount,
+  });
 });
-
 // POST /api/cart  (add item)
 export const POST = apiHandler(async (req) => {
   await connectDB();
@@ -51,12 +108,17 @@ export const POST = apiHandler(async (req) => {
 
   // Find product
   const product = await Product.findById(productId).lean();
-  if (!product || !product.isActive) return errorResponse("محصول یافت نشد", 404);
+  if (!product || !product.isActive)
+    return errorResponse("محصول یافت نشد", 404);
 
   // Find variant
-  let price, comparePrice, variantSnapshot = {};
+  let price,
+    comparePrice,
+    variantSnapshot = {};
   if (variantId) {
-    const variant = product.variants.find((v) => v._id.toString() === variantId);
+    const variant = product.variants.find(
+      (v) => v._id.toString() === variantId
+    );
     if (!variant) return errorResponse("ویریانت یافت نشد", 404);
     if (variant.stock < quantity) return errorResponse("موجودی کافی نیست", 400);
     price = variant.price;
@@ -122,7 +184,10 @@ export const POST = apiHandler(async (req) => {
   const subtotal = cart.items.reduce((s, i) => s + i.price * i.quantity, 0);
   const itemsCount = cart.items.reduce((s, i) => s + i.quantity, 0);
 
-  return successResponse({ ...cart.toObject(), subtotal, itemsCount }, "محصول به سبد اضافه شد");
+  return successResponse(
+    { ...cart.toObject(), subtotal, itemsCount },
+    "محصول به سبد اضافه شد"
+  );
 });
 
 // DELETE /api/cart  (clear cart)
