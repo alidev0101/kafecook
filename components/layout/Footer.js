@@ -153,7 +153,7 @@ export default function Footer() {
         <div className="container-custom py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-500">
           <p>© ۱۴۰۳ کافه کوک — تمامی حقوق محفوظ است</p>
           <p className="flex items-center gap-1">
-            ساخته شده با <Heart size={11} className="text-red-400 fill-red-400 mx-0.5" /> در کرمان
+            نسخه : 1.0.1
           </p>
         </div>
       </div>
