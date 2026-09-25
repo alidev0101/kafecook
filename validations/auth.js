@@ -37,18 +37,14 @@ export const registerSchema = z
   });
 
 export const forgotPasswordSchema = z.object({
-  email: z
-    .string({ required_error: "ایمیل الزامی است" })
-    .email("ایمیل معتبر نیست"),
+  email: z.string().email("ایمیل وارد شده معتبر نیست"),
 });
 
 export const resetPasswordSchema = z
   .object({
-    password: z
-      .string()
-      .min(6, "رمز عبور باید حداقل ۶ کاراکتر باشد")
-      .max(50),
-    confirmPassword: z.string(),
+    token: z.string().min(1, "توکن تغییر رمز معتبر نیست"),
+    password: z.string().min(6, "رمز عبور باید حداقل ۶ کاراکتر باشد"),
+    confirmPassword: z.string().min(1, "تکرار رمز عبور الزامی است"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "رمز عبور و تکرار آن یکسان نیستند",

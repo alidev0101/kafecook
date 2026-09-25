@@ -21,8 +21,7 @@ const POST_TYPES = [
   { value: "product_review", label: "معرفی محصول" },
   { value: "brewing_guide",  label: "روش دم‌آوری" },
 ];
-
-const DEFAULT_IMG = "/images/default-product.svg";
+import { DEFAULT_IMG } from "@/lib/constants";
 
 export default function PostForm({ post }) {
   const router    = useRouter();

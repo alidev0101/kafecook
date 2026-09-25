@@ -13,6 +13,7 @@ import StarRating from "@/components/ui/StarRating";
 import ConfirmDialog from "@/components/admin/ConfirmDialog";
 import { formatDate, formatNumber } from "@/lib/utils";
 import Skeleton from "@/components/ui/Skeleton";
+import { DEFAULT_IMG } from "@/lib/constants";
 
 const STATUS_TABS = [
   { value: "",          label: "همه",           icon: null },
@@ -192,18 +193,14 @@ export default function AdminReviewsPage() {
 // ─── ReviewRow ────────────────────────────────────────────────────────────────
 function ReviewRow({ review, expanded, onToggle, onApprove, onReject, onDelete, loading }) {
   const cfg = STATUS_CONFIG[review.status] || STATUS_CONFIG.pending;
-  const productImage = review.product?.images?.[0]?.url;
+  const productImage = review.product?.images?.[0]?.url || DEFAULT_IMG;
 
   return (
     <div className="py-4 first:pt-0 last:pb-0">
       <div className="flex items-start gap-4">
         {/* Product thumb */}
         <div className="w-12 h-12 rounded-xl bg-gray-100 dark:bg-gray-800 overflow-hidden relative flex-shrink-0">
-          {productImage ? (
-            <Image src={productImage} alt={review.product?.name || ""} fill className="object-cover" />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-lg opacity-20 dark:opacity-10">☕</div>
-          )}
+          <Image src={productImage} alt={review.product?.name || ""} fill className="object-cover" />
         </div>
 
         {/* Content */}

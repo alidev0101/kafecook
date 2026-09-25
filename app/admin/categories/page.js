@@ -100,7 +100,7 @@ export default function AdminCategoriesPage() {
   ];
 
   return (
-    <div className="space-y-5">
+    <div>
       <PageHeader title="مدیریت دسته‌بندی‌ها" action={{ label: "دسته‌بندی جدید", onClick: () => setCreateOpen(true) }} />
       <div className="bg-white rounded-2xl shadow-card p-5">
         <DataTable columns={columns} data={categories} loading={isLoading} />

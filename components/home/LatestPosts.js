@@ -9,8 +9,7 @@ import { Calendar, Clock, ArrowLeft, BookOpen } from "lucide-react";
 import { formatDate, formatNumber } from "@/lib/utils";
 import Skeleton from "@/components/ui/Skeleton";
 import SectionHeader from "@/components/shared/SectionHeader";
-
-const DEFAULT_IMG = "/images/default-product.svg";
+import { DEFAULT_IMG } from "@/lib/constants";
 
 function PostMiniCard({ post, index }) {
   return (

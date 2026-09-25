@@ -4,7 +4,14 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
-import { Edit2, Trash2, Eye, Plus, ToggleLeft, ToggleRight } from "lucide-react";
+import {
+  Edit2,
+  Trash2,
+  Eye,
+  Plus,
+  ToggleLeft,
+  ToggleRight,
+} from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import PageHeader from "@/components/admin/PageHeader";
@@ -16,6 +23,7 @@ import Badge from "@/components/ui/Badge";
 import { formatPrice, formatNumber, formatDate } from "@/lib/utils";
 import Modal from "@/components/ui/Modal";
 import ProductForm from "@/components/admin/ProductForm";
+import { DEFAULT_IMG } from "@/lib/constants";
 
 export default function AdminProductsPage() {
   const [search, setSearch] = useState("");
@@ -29,9 +37,14 @@ export default function AdminProductsPage() {
     queryKey: ["admin-products", search, page],
     queryFn: () =>
       axios
-        .get(`/api/products?search=${encodeURIComponent(search)}&page=${page}&limit=15`, {
-          headers: { "x-admin": "true" },
-        })
+        .get(
+          `/api/products?search=${encodeURIComponent(
+            search
+          )}&page=${page}&limit=15`,
+          {
+            headers: { "x-admin": "true" },
+          }
+        )
         .then((r) => r.data),
     keepPreviousData: true,
     staleTime: 30 * 1000,
@@ -53,11 +66,12 @@ export default function AdminProductsPage() {
       title: "تصویر",
       render: (images, row) => (
         <div className="w-12 h-12 rounded-xl bg-cream-50 overflow-hidden relative flex-shrink-0">
-          {images?.[0]?.url ? (
-            <Image src={images[0].url} alt={row.name} fill className="object-cover" />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-xl opacity-30">☕</div>
-          )}
+          <Image
+            src={images[0]?.url || DEFAULT_IMG}
+            alt={row.name}
+            fill
+            className="object-cover"
+          />
         </div>
       ),
     },
@@ -74,12 +88,18 @@ export default function AdminProductsPage() {
     {
       key: "category",
       title: "دسته‌بندی",
-      render: (v) => <span className="text-sm text-gray-600">{v?.name || "—"}</span>,
+      render: (v) => (
+        <span className="text-sm text-gray-600">{v?.name || "—"}</span>
+      ),
     },
     {
       key: "basePrice",
       title: "قیمت پایه",
-      render: (v) => <span className="font-semibold text-gray-800 text-sm">{formatPrice(v)}</span>,
+      render: (v) => (
+        <span className="font-semibold text-gray-800 text-sm">
+          {formatPrice(v)}
+        </span>
+      ),
     },
     {
       key: "variants",
@@ -87,7 +107,15 @@ export default function AdminProductsPage() {
       render: (variants) => {
         const totalStock = variants?.reduce((s, v) => s + v.stock, 0) || 0;
         return (
-          <Badge variant={totalStock === 0 ? "danger" : totalStock <= 10 ? "warning" : "success"}>
+          <Badge
+            variant={
+              totalStock === 0
+                ? "danger"
+                : totalStock <= 10
+                ? "warning"
+                : "success"
+            }
+          >
             {formatNumber(totalStock)} عدد
           </Badge>
         );
@@ -105,12 +133,18 @@ export default function AdminProductsPage() {
     {
       key: "isActive",
       title: "وضعیت",
-      render: (v) => <Badge variant={v ? "success" : "danger"}>{v ? "فعال" : "غیرفعال"}</Badge>,
+      render: (v) => (
+        <Badge variant={v ? "success" : "danger"}>
+          {v ? "فعال" : "غیرفعال"}
+        </Badge>
+      ),
     },
     {
       key: "createdAt",
       title: "تاریخ ثبت",
-      render: (v) => <span className="text-xs text-gray-400">{formatDate(v)}</span>,
+      render: (v) => (
+        <span className="text-xs text-gray-400">{formatDate(v)}</span>
+      ),
     },
     {
       key: "_id",
@@ -145,7 +179,7 @@ export default function AdminProductsPage() {
   ];
 
   return (
-    <div className="space-y-5">
+    <div>
       <PageHeader
         title="مدیریت محصولات"
         description={`${formatNumber(data?.pagination?.total || 0)} محصول`}
@@ -156,30 +190,53 @@ export default function AdminProductsPage() {
         <div className="flex flex-col sm:flex-row gap-3 mb-5">
           <SearchInput
             value={search}
-            onChange={(v) => { setSearch(v); setPage(1); }}
+            onChange={(v) => {
+              setSearch(v);
+              setPage(1);
+            }}
             placeholder="جستجوی محصول..."
           />
         </div>
         <DataTable columns={columns} data={data?.data} loading={isLoading} />
         {data?.pagination && (
-          <Pagination page={data.pagination.page} totalPages={data.pagination.totalPages} onPageChange={setPage} />
+          <Pagination
+            page={data.pagination.page}
+            totalPages={data.pagination.totalPages}
+            onPageChange={setPage}
+          />
         )}
       </div>
 
       {/* Create modal */}
-      <Modal isOpen={createOpen} onClose={() => setCreateOpen(false)} title="محصول جدید" size="2xl">
+      <Modal
+        isOpen={createOpen}
+        onClose={() => setCreateOpen(false)}
+        title="محصول جدید"
+        size="2xl"
+      >
         <ProductForm
-          onSuccess={() => { setCreateOpen(false); qc.invalidateQueries(["admin-products"]); }}
+          onSuccess={() => {
+            setCreateOpen(false);
+            qc.invalidateQueries(["admin-products"]);
+          }}
           onCancel={() => setCreateOpen(false)}
         />
       </Modal>
 
       {/* Edit modal */}
-      <Modal isOpen={!!editProduct} onClose={() => setEditProduct(null)} title="ویرایش محصول" size="2xl">
+      <Modal
+        isOpen={!!editProduct}
+        onClose={() => setEditProduct(null)}
+        title="ویرایش محصول"
+        size="2xl"
+      >
         {editProduct && (
           <ProductForm
             product={editProduct}
-            onSuccess={() => { setEditProduct(null); qc.invalidateQueries(["admin-products"]); }}
+            onSuccess={() => {
+              setEditProduct(null);
+              qc.invalidateQueries(["admin-products"]);
+            }}
             onCancel={() => setEditProduct(null)}
           />
         )}

@@ -25,8 +25,7 @@ import { ProductGridSkeleton } from "@/components/ui/Skeleton";
 import ReviewForm from "@/components/product/ReviewForm";
 import ReviewList from "@/components/product/ReviewList";
 import ProductGrid from "@/components/product/ProductGrid";
-
-const DEFAULT_IMG = "/images/default-product.svg";
+import { DEFAULT_IMG } from "@/lib/constants";
 
 const TABS = [
   { id: "description",   label: "توضیحات"       },

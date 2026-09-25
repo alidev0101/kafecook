@@ -3,8 +3,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Calendar, Clock } from "lucide-react";
 import { formatDate, formatNumber } from "@/lib/utils";
-
-const DEFAULT_IMG = "/images/default-product.svg";
+import { DEFAULT_IMG } from "@/lib/constants";
 
 export default function RelatedPosts({ posts = [] }) {
   if (!posts.length) return null;

@@ -10,7 +10,7 @@ export const GET = apiHandler(async (req) => {
   const featured = searchParams.get("featured");
   const tree = searchParams.get("tree");
 
-  const filter = { isActive: true };
+ const filter = req.user?.role === "ADMIN" ? {} : { isActive: true };
 
   if (parent === "null" || parent === "root") {
     filter.parent = null;
@@ -40,7 +40,7 @@ export const GET = apiHandler(async (req) => {
   }
 
   return successResponse(categories);
-});
+},{ optionalAuth: true });
 
 // POST /api/categories  (admin only)
 export const POST = apiHandler(

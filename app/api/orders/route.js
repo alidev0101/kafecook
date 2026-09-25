@@ -30,7 +30,7 @@ export const GET = apiHandler(
 
     const [orders, total] = await Promise.all([
       Order.find(filter)
-        .select("orderNumber status paymentStatus total items createdAt shippingAddress")
+        .select("orderNumber status paymentMethod paymentStatus total items createdAt shippingAddress")
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)

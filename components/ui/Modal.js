@@ -6,30 +6,32 @@ import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const sizes = {
-  sm:   "max-w-sm",
-  md:   "max-w-md",
-  lg:   "max-w-lg",
-  xl:   "max-w-xl",
-  "2xl":"max-w-2xl",
+  sm: "max-w-sm",
+  md: "max-w-md",
+  lg: "max-w-lg",
+  xl: "max-w-xl",
+  "2xl": "max-w-2xl",
 };
 
 export default function Modal({ isOpen, onClose, title, children, size = "md", className }) {
   useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    if (!isOpen) return;
+    const original = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = original; };
   }, [isOpen]);
 
   useEffect(() => {
-    const onKey = (e) => { if (e.key === "Escape") onClose(); };
-    if (isOpen) document.addEventListener("keydown", onKey);
+    if (!isOpen) return;
+    const onKey = (e) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [isOpen, onClose]);
 
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          {/* Backdrop */}
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4">
           <motion.div
             key="backdrop"
             initial={{ opacity: 0 }}
@@ -39,40 +41,34 @@ export default function Modal({ isOpen, onClose, title, children, size = "md", c
             onClick={onClose}
           />
 
-          {/* Panel */}
           <motion.div
             key="panel"
-            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            initial={{ opacity: 0, scale: 0.97, y: 8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 10 }}
-            transition={{ duration: 0.18, ease: "easeOut" }}
+            exit={{ opacity: 0, scale: 0.97, y: 8 }}
+            transition={{ duration: 0.18 }}
             className={cn(
-              "relative w-full bg-card border border-border rounded-2xl shadow-2xl z-10",
+              "relative z-10 flex w-full max-h-[calc(100dvh-1rem)] flex-col overflow-hidden rounded-xl sm:max-h-[90dvh] sm:rounded-2xl bg-card border border-border shadow-2xl",
               sizes[size],
               className
             )}
           >
             {title ? (
-              <div className="flex items-center justify-between p-5 border-b border-border">
-                <h2 className="text-base font-bold text-foreground">{title}</h2>
-                <button
-                  onClick={onClose}
-                  className="p-1.5 rounded-xl hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
-                  aria-label="بستن"
-                >
+              <div className="flex shrink-0 items-center justify-between gap-3 border-b border-border px-4 py-3.5 sm:p-5">
+                <h2 className="min-w-0 truncate text-sm font-bold text-foreground sm:text-base">{title}</h2>
+                <button onClick={onClose} className="shrink-0 rounded-xl p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground" aria-label="بستن">
                   <X size={17} />
                 </button>
               </div>
             ) : (
-              <button
-                onClick={onClose}
-                className="absolute top-3.5 left-3.5 p-1.5 rounded-xl hover:bg-accent text-muted-foreground hover:text-foreground transition-colors z-10"
-                aria-label="بستن"
-              >
+              <button onClick={onClose} className="absolute left-3 top-3 z-10 rounded-xl p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground" aria-label="بستن">
                 <X size={17} />
               </button>
             )}
-            <div className="p-5">{children}</div>
+
+            <div className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-5">
+              {children}
+            </div>
           </motion.div>
         </div>
       )}

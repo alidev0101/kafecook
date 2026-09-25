@@ -17,8 +17,7 @@ import ConfirmDialog from "@/components/admin/ConfirmDialog";
 import Skeleton from "@/components/ui/Skeleton";
 import Pagination from "@/components/ui/Pagination";
 import { formatDate, formatNumber } from "@/lib/utils";
-
-const DEFAULT_IMG = "/images/default-product.svg";
+import { DEFAULT_IMG } from "@/lib/constants";
 
 const STATUS_TABS = [
   { value: "",          label: "همه",        icon: Filter },

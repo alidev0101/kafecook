@@ -1,7 +1,7 @@
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminHeader from "@/components/admin/AdminHeader";
 
-export const metadata = { title: { default: "داشبورد ادمین | کافه کوک", template: "%s | ادمین کافه کوک" } };
+export const metadata = { title: { default: "داشبورد ادمین", template: "%s | ادمین کافه کوک" } };
 
 export default function AdminLayout({ children }) {
   return (

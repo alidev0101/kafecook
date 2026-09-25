@@ -91,7 +91,7 @@ export default function AdminBrandsPage() {
   ];
 
   return (
-    <div className="space-y-5">
+    <div>
       <PageHeader title="مدیریت برندها" action={{ label: "برند جدید", onClick: () => setCreateOpen(true) }} />
       <div className="bg-white rounded-2xl shadow-card p-5">
         <DataTable columns={columns} data={brands} loading={isLoading} />

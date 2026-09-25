@@ -3,8 +3,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Calendar, Clock, Eye, Tag } from "lucide-react";
 import { formatDate, formatNumber } from "@/lib/utils";
-
-const DEFAULT_IMG = "/images/default-product.svg";
+import { DEFAULT_IMG } from "@/lib/constants";
 
 const POST_TYPE_LABELS = {
   article:       { label: "مقاله",           color: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400" },

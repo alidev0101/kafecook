@@ -18,7 +18,7 @@ export default function AdminSettingsPage() {
   };
 
   return (
-    <div className="max-w-3xl space-y-6">
+    <div className="max-w-7xl space-y-6">
       <h1 className="text-xl font-bold text-gray-900">تنظیمات فروشگاه</h1>
 
       <form onSubmit={handleSave} className="space-y-5">

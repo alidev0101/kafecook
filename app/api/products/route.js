@@ -8,6 +8,8 @@ import {
   buildPaginationMeta,
 } from "@/lib/apiResponse";
 import Product from "@/models/Product";
+import Category from "@/models/Category";
+import Brand from "@/models/Brand";
 import { productSchema } from "@/validations/product";
 
 // GET /api/products
@@ -20,7 +22,7 @@ export const GET = apiHandler(async (req) => {
   );
 
   // Build filter
-  const filter = { isActive: true };
+  const filter = req.user?.role === "ADMIN" ? {} : { isActive: true };
 
   const search = searchParams.get("search");
   if (search) {
@@ -76,7 +78,7 @@ export const GET = apiHandler(async (req) => {
       .populate("category", "name slug")
       .populate("brand", "name slug logo")
       .select(
-        "name slug images basePrice baseComparePrice averageRating reviewsCount isFeatured isNew isBestSeller variants category brand soldCount"
+        "name slug images basePrice baseComparePrice averageRating reviewsCount isActive isFeatured isNew isBestSeller variants category brand soldCount createdAt"
       )
       .sort(sort)
       .skip(skip)
@@ -86,7 +88,7 @@ export const GET = apiHandler(async (req) => {
   ]);
 
   return paginatedResponse(products, buildPaginationMeta(total, page, limit));
-});
+},{ optionalAuth: true });
 
 // POST /api/products  (admin only)
 export const POST = apiHandler(

@@ -9,8 +9,7 @@ import { cn, formatPrice, calcDiscount, formatNumber } from "@/lib/utils";
 import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore } from "@/store/wishlistStore";
 import Badge from "@/components/ui/Badge";
-
-const DEFAULT_IMG = "/images/default-product.svg";
+import { DEFAULT_IMG } from "@/lib/constants";
 
 export default function ProductCard({ product, className }) {
   const { addItem, items }       = useCartStore();

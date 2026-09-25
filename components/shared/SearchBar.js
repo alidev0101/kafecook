@@ -8,9 +8,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { formatPrice } from "@/lib/utils";
-
+import { DEFAULT_IMG } from "@/lib/constants";
 const SUGGESTIONS = ["اسپرسو", "کلمبیا", "اتیوپی", "فرنچ پرس", "کولد برو"];
-const DEFAULT_IMG = "/images/default-product.svg";
+
 
 export default function SearchBar({ onClose }) {
   const [query, setQuery] = useState("");

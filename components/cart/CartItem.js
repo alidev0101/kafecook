@@ -7,8 +7,7 @@ import { Minus, Plus, Trash2 } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 import { formatPrice } from "@/lib/utils";
 import { toast } from "sonner";
-
-const DEFAULT_IMG = "/images/default-product.svg";
+import { DEFAULT_IMG } from "@/lib/constants";
 
 export default function CartItem({ item }) {
   const { updateQuantity, removeItem } = useCartStore();

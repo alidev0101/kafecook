@@ -7,7 +7,7 @@ export const GET = apiHandler(async (req) => {
   const { searchParams } = new URL(req.url);
   const featured = searchParams.get("featured");
 
-  const filter = { isActive: true };
+   const filter = req.user?.role === "ADMIN" ? {} : { isActive: true };
   if (featured === "true") filter.isFeatured = true;
 
   const brands = await Brand.find(filter)
@@ -15,7 +15,7 @@ export const GET = apiHandler(async (req) => {
     .lean();
 
   return successResponse(brands);
-});
+},{ optionalAuth: true });
 
 export const POST = apiHandler(
   async (req) => {

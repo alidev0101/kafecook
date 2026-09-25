@@ -41,21 +41,40 @@ export default function ProductForm({ product, onSuccess, onCancel }) {
           brand: product.brand?._id || product.brand || "",
           variants: product.variants?.length
             ? product.variants
-            : [{ weightLabel: "۲۵۰ گرم", weight: 250, price: 0, stock: 0, grindType: "whole_bean" }],
-          isActive:     product.isActive !== undefined ? product.isActive : true,
-          isFeatured:   product.isFeatured || false,
-          isNew:        product.isNew !== undefined ? product.isNew : true,
+            : [
+                {
+                  weightLabel: "۲۵۰ گرم",
+                  weight: 250,
+                  price: 0,
+                  stock: 0,
+                  grindType: "whole_bean",
+                },
+              ],
+          isActive: product.isActive !== undefined ? product.isActive : true,
+          isFeatured: product.isFeatured || false,
+          isNew: product.isNew !== undefined ? product.isNew : true,
           isBestSeller: product.isBestSeller || false,
           brewingGuide: product.brewingGuide || "",
         }
       : {
-          variants: [{ weightLabel: "۲۵۰ گرم", weight: 250, price: 0, stock: 0, grindType: "whole_bean" }],
+          variants: [
+            {
+              weightLabel: "۲۵۰ گرم",
+              weight: 250,
+              price: 0,
+              stock: 0,
+              grindType: "whole_bean",
+            },
+          ],
           isActive: true,
           isNew: true,
         },
   });
 
-  const { fields, append, remove } = useFieldArray({ control, name: "variants" });
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "variants",
+  });
 
   const mutation = useMutation({
     mutationFn: (data) =>
@@ -75,12 +94,12 @@ export default function ProductForm({ product, onSuccess, onCancel }) {
       images, // آرایه تصاویر آپلود‌شده
       variants: data.variants.map((v) => ({
         ...v,
-        weight:       Number(v.weight)       || 250,
-        price:        Number(v.price)        || 0,
+        weight: Number(v.weight) || 250,
+        price: Number(v.price) || 0,
         comparePrice: v.comparePrice ? Number(v.comparePrice) : null,
-        stock:        Number(v.stock)        || 0,
+        stock: Number(v.stock) || 0,
       })),
-      brand:  data.brand || null,
+      brand: data.brand || null,
     };
     mutation.mutate(payload);
   };
@@ -112,7 +131,7 @@ export default function ProductForm({ product, onSuccess, onCancel }) {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-            دسته‌بندی *
+            دسته‌بندی <span className="text-red-500">*</span>
           </label>
           <select
             className="input-custom h-11"
@@ -120,20 +139,28 @@ export default function ProductForm({ product, onSuccess, onCancel }) {
           >
             <option value="">انتخاب دسته‌بندی</option>
             {categories?.map((c) => (
-              <option key={c._id} value={c._id}>{c.name}</option>
+              <option key={c._id} value={c._id}>
+                {c.name}
+              </option>
             ))}
           </select>
           {errors.category && (
-            <p className="text-xs text-red-500 mt-1">{errors.category.message}</p>
+            <p className="text-xs text-red-500 mt-1">
+              {errors.category.message}
+            </p>
           )}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">برند</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+            برند
+          </label>
           <select className="input-custom h-11" {...register("brand")}>
             <option value="">بدون برند</option>
             {brands?.map((b) => (
-              <option key={b._id} value={b._id}>{b.name}</option>
+              <option key={b._id} value={b._id}>
+                {b.name}
+              </option>
             ))}
           </select>
         </div>
@@ -182,7 +209,13 @@ export default function ProductForm({ product, onSuccess, onCancel }) {
             variant="secondary"
             size="sm"
             onClick={() =>
-              append({ weightLabel: "", weight: 250, price: 0, stock: 0, grindType: "whole_bean" })
+              append({
+                weightLabel: "",
+                weight: 250,
+                price: 0,
+                stock: 0,
+                grindType: "whole_bean",
+              })
             }
           >
             <Plus size={14} /> افزودن
@@ -193,45 +226,56 @@ export default function ProductForm({ product, onSuccess, onCancel }) {
           {fields.map((field, i) => (
             <div
               key={field.id}
-              className="grid grid-cols-2 sm:grid-cols-5 gap-2 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl"
+              className="grid grid-cols-2 sm:grid-cols-6 gap-2 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl"
             >
               <Input
+                label="برچسب وزن"
                 placeholder="برچسب وزن"
                 {...register(`variants.${i}.weightLabel`, { required: true })}
               />
               <Input
+                label="وزن (گرم)"
                 type="number"
                 placeholder="وزن (گرم)"
                 {...register(`variants.${i}.weight`)}
               />
               <Input
+                label="قیمت (تومان)"
                 type="number"
                 placeholder="قیمت (تومان)"
                 {...register(`variants.${i}.price`, { required: true })}
               />
               <Input
+                label="موجودی"
                 type="number"
                 placeholder="موجودی"
                 {...register(`variants.${i}.stock`)}
               />
-              <div className="flex gap-2">
-                <select
-                  className="flex-1 h-11 px-2 rounded-xl border border-input bg-background text-foreground text-xs focus:outline-none focus:ring-2 focus:ring-coffee-500"
-                  {...register(`variants.${i}.grindType`)}
-                >
-                  {Object.entries(GRIND_LABELS).map(([v, l]) => (
-                    <option key={v} value={v}>{l}</option>
-                  ))}
-                </select>
-                {fields.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => remove(i)}
-                    className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors"
+              <div className="flex gap-2 col-span-2 flex-col">
+                <label className="block text-sm font-medium text-foreground">
+                  دسته بندی
+                </label>
+                <div className="flex">
+                  <select
+                    className="flex-1 h-11 px-2 rounded-xl border border-input bg-background text-foreground text-xs focus:outline-none focus:ring-2 focus:ring-coffee-500"
+                    {...register(`variants.${i}.grindType`)}
                   >
-                    <Trash2 size={14} />
-                  </button>
-                )}
+                    {Object.entries(GRIND_LABELS).map(([v, l]) => (
+                      <option key={v} value={v}>
+                        {l}
+                      </option>
+                    ))}
+                  </select>
+                  {fields.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => remove(i)}
+                      className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           ))}
@@ -240,21 +284,28 @@ export default function ProductForm({ product, onSuccess, onCancel }) {
 
       {/* ─── وضعیت‌ها ───────────────────────────────────────── */}
       <div>
-        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">وضعیت</h3>
+        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+          وضعیت
+        </h3>
         <div className="flex flex-wrap gap-5">
           {[
-            { name: "isActive",     label: "فعال" },
-            { name: "isFeatured",   label: "ویژه" },
-            { name: "isNew",        label: "جدید" },
+            { name: "isActive", label: "فعال" },
+            { name: "isFeatured", label: "ویژه" },
+            { name: "isNew", label: "جدید" },
             { name: "isBestSeller", label: "پرفروش" },
           ].map(({ name, label }) => (
-            <label key={name} className="flex items-center gap-2 cursor-pointer">
+            <label
+              key={name}
+              className="flex items-center gap-2 cursor-pointer"
+            >
               <input
                 type="checkbox"
                 className="w-4 h-4 accent-coffee-600 rounded"
                 {...register(name)}
               />
-              <span className="text-sm text-gray-700 dark:text-gray-300">{label}</span>
+              <span className="text-sm text-gray-700 dark:text-gray-300">
+                {label}
+              </span>
             </label>
           ))}
         </div>

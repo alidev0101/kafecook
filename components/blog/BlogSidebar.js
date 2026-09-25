@@ -6,8 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Tag, Folder, Clock, TrendingUp } from "lucide-react";
 import { formatDate, formatNumber } from "@/lib/utils";
-
-const DEFAULT_IMG = "/images/default-product.svg";
+import { DEFAULT_IMG } from "@/lib/constants";
 
 function SideSection({ title, icon: Icon, children }) {
   return (

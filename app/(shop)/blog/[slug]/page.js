@@ -9,8 +9,6 @@ import BlogSidebar from "@/components/blog/BlogSidebar";
 import { formatDate, formatNumber } from "@/lib/utils";
 import { Calendar, Clock, Eye, Tag, User, ArrowLeft } from "lucide-react";
 
-const DEFAULT_IMG = "/images/default-product.svg";
-
 const POST_TYPE_LABELS = {
   article:       "مقاله",
   tutorial:      "آموزش",

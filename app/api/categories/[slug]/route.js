@@ -17,6 +17,7 @@ export const GET = apiHandler(async (req, { params }) => {
 export const PUT = apiHandler(
   async (req, { params }) => {
     const body = await req.json();
+    if (body.parent === "") body.parent = null;
     const category = await Category.findOneAndUpdate(
       { slug: params.slug },
       body,
