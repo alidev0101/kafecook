@@ -16,25 +16,26 @@ import {
   Gift,
 } from "lucide-react";
 import Skeleton from "@/components/ui/Skeleton";
+import SectionHeader from "../shared/SectionHeader";
 
 /* fallback categories (icons come from the slug map below, not from data) */
 const defaultCats = [
-  { _id: "1", name: "اسپرسو",    slug: "espresso" },
-  { _id: "2", name: "دان قهوه",  slug: "coffee-beans" },
-  { _id: "3", name: "فیلتری",    slug: "filter-coffee" },
-  { _id: "4", name: "کولد برو",  slug: "cold-brew" },
+  { _id: "1", name: "اسپرسو", slug: "espresso" },
+  { _id: "2", name: "دان قهوه", slug: "coffee-beans" },
+  { _id: "3", name: "فیلتری", slug: "filter-coffee" },
+  { _id: "4", name: "کولد برو", slug: "cold-brew" },
   { _id: "5", name: "قهوه ویژه", slug: "specialty" },
   { _id: "6", name: "هدیه قهوه", slug: "gift-sets" },
 ];
 
 /* slug → lucide icon. Unknown slugs fall back to Coffee */
 const iconBySlug = {
-  "espresso":      Coffee,
-  "coffee-beans":  Bean,
+  "espresso": Coffee,
+  "coffee-beans": Bean,
   "filter-coffee": Droplets,
-  "cold-brew":     Snowflake,
-  "specialty":     Sparkles,
-  "gift-sets":     Gift,
+  "cold-brew": Snowflake,
+  "specialty": Sparkles,
+  "gift-sets": Gift,
 };
 
 /* shared glass surface — readable in both light and dark themes */
@@ -132,57 +133,35 @@ export default function FeaturedCategories() {
 
       <div className="container-custom relative">
         {/* Header */}
-        <div className="flex items-end justify-between gap-4 mb-9">
-          <div>
-            <motion.h2
-              initial={reduce ? false : { opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-              className="section-title"
-            >
-              دسته‌بندی‌های محبوب
-            </motion.h2>
-            <p className="section-subtitle">سبک مورد علاقه‌ات را پیدا کن</p>
-          </div>
-
-          <Link
-            href="/categories"
-            className={`${glass} group shrink-0 inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs sm:text-sm font-medium
-              text-coffee-700 dark:text-coffee-300 hover:border-coffee-400/40 transition-all duration-300`}
-          >
-            همه دسته‌ها
-            <ArrowLeft
-              size={14}
-              strokeWidth={1.75}
-              className="transition-transform duration-300 group-hover:-translate-x-1"
-            />
-          </Link>
-        </div>
+        <SectionHeader
+          title="دسته‌بندی‌های محبوب"
+          subtitle="سبک مورد علاقه‌ات را پیدا کن"
+          href="/categories"
+        />
 
         {/* Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
           {isLoading
             ? Array.from({ length: 6 }).map((_, i) => (
-                <div
-                  key={i}
-                  className={`${glass} flex flex-col items-center gap-3.5 rounded-3xl px-3 py-6 sm:py-7`}
-                >
-                  <Skeleton className="h-14 w-14 sm:h-16 sm:w-16 rounded-2xl" />
-                  <Skeleton className="h-3 w-16" />
-                </div>
-              ))
+              <div
+                key={i}
+                className={`${glass} flex flex-col items-center gap-3.5 rounded-3xl px-3 py-6 sm:py-7`}
+              >
+                <Skeleton className="h-14 w-14 sm:h-16 sm:w-16 rounded-2xl" />
+                <Skeleton className="h-3 w-16" />
+              </div>
+            ))
             : items.map((cat, i) => (
-                <motion.div
-                  key={cat._id}
-                  initial={reduce ? false : { opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.06, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <CategoryCard cat={cat} />
-                </motion.div>
-              ))}
+              <motion.div
+                key={cat._id}
+                initial={reduce ? false : { opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.06, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <CategoryCard cat={cat} />
+              </motion.div>
+            ))}
         </div>
       </div>
     </section>

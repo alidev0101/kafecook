@@ -9,11 +9,11 @@ import { ArrowLeft, Star, ShieldCheck, Truck, Award } from "lucide-react";
 /* ── animation variants ── */
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
-  show:   { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
 };
 const stagger = {
   hidden: {},
-  show:   { transition: { staggerChildren: 0.1 } },
+  show: { transition: { staggerChildren: 0.1 } },
 };
 
 /* ── shared glass surface: hairline border + top inner highlight + soft depth ── */
@@ -31,14 +31,14 @@ export default function HeroSection() {
     reduce
       ? {}
       : {
-          animate: { y: [0, from, to, 0] },
-          transition: { duration, repeat: Infinity, ease: "easeInOut", delay },
-        };
+        animate: { y: [0, from, to, 0] },
+        transition: { duration, repeat: Infinity, ease: "easeInOut", delay },
+      };
 
   return (
     <section
       ref={ref}
-      className="relative min-h-[92vh] flex items-center overflow-hidden bg-hero-dark"
+      className="relative min-h-screen flex items-center overflow-hidden bg-hero-dark pt-20"
     >
       {/* ── Background: parallax gradient + soft orbs ── */}
       <motion.div className="absolute inset-0" style={reduce ? undefined : { y: bgY }}>
@@ -127,14 +127,14 @@ export default function HeroSection() {
             {/* Trust strip — one glass bar, monochrome icons */}
             <motion.div variants={fadeUp}>
               <div
-                className={`${glass} inline-flex flex-wrap items-stretch rounded-2xl divide-x divide-x-reverse divide-white/10 text-coffee-300 text-[13px]`}
+                className={`${glass} inline-flex  items-stretch rounded-xl divide-x divide-x-reverse divide-white/10 text-coffee-300 text-xs`}
               >
                 {[
                   { icon: ShieldCheck, label: "ضمانت اصالت" },
-                  { icon: Truck,       label: "ارسال سریع" },
-                  { icon: Award,       label: "+۲۰۰۰ مشتری راضی" },
+                  { icon: Truck, label: "ارسال سریع" },
+                  { icon: Award, label: "+۲۰۰۰ مشتری راضی" },
                 ].map(({ icon: Icon, label }) => (
-                  <span key={label} className="flex items-center gap-2 px-4 py-2.5">
+                  <span key={label} className="flex items-center gap-2 px-1.5 md:px-3 py-2.5">
                     <Icon size={15} className="text-amber-200/80" strokeWidth={1.75} />
                     {label}
                   </span>
@@ -163,7 +163,7 @@ export default function HeroSection() {
                 <div className="relative w-full h-full rounded-full overflow-hidden bg-coffee-900/50">
                   {/* ← تصویر اصلی را اینجا قرار دهید: /images/hero-main.jpg */}
                   <Image
-                    src="/images/hero-main.jpg"
+                    src="/images/hero-product-1.jpg"
                     alt="قهوه تخصصی کافه کوک"
                     fill
                     className="object-cover"
@@ -171,8 +171,15 @@ export default function HeroSection() {
                     onError={(e) => { e.currentTarget.style.display = "none"; }}
                   />
                   {/* Placeholder تا زمانی که تصویر قرار داده نشده */}
-                  <div className="w-full h-full flex items-center justify-center text-[96px] select-none opacity-25">
-                    ☕
+                  <div className="w-full h-full flex items-center justify-center select-none">
+                    <Image
+                      src="/images/hero-product-1.jpg"
+                      alt="قهوه تخصصی کافه کوک"
+                      fill
+                      className="object-cover"
+                      priority
+                      onError={(e) => { e.currentTarget.style.display = "none"; }}
+                    />
                   </div>
                   {/* Soft inner sheen */}
                   <div className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-br from-white/[0.10] via-transparent to-black/25" />
@@ -182,7 +189,7 @@ export default function HeroSection() {
               {/* ── تصویر سمت راست (تصویر ۲) ── */}
               <motion.div
                 {...float(-8, -8, 3.5)}
-                className={`${glass} absolute -right-6 top-1/4 w-24 h-24 rounded-3xl p-1.5`}
+                className={`${glass} absolute -right-2 top-0 w-24 h-24 rounded-3xl p-1.5`}
               >
                 <div className="relative w-full h-full rounded-2xl overflow-hidden bg-coffee-900/60">
                   {/* ← تصویر محصول ۱ را اینجا قرار دهید: /images/hero-product-1.jpg */}
@@ -200,7 +207,7 @@ export default function HeroSection() {
               {/* ── تصویر سمت چپ (تصویر ۳) ── */}
               <motion.div
                 {...float(8, 8, 4, 0.5)}
-                className={`${glass} absolute -left-6 bottom-1/4 w-20 h-20 rounded-3xl p-1.5`}
+                className={`${glass} absolute left-0 bottom-1/4 w-20 h-20 rounded-3xl p-1.5`}
               >
                 <div className="relative w-full h-full rounded-2xl overflow-hidden bg-coffee-900/60">
                   {/* ← تصویر محصول ۲ را اینجا قرار دهید: /images/hero-product-2.jpg */}
@@ -211,7 +218,6 @@ export default function HeroSection() {
                     className="object-cover"
                     onError={(e) => { e.currentTarget.style.display = "none"; }}
                   />
-                  <div className="absolute inset-0 flex items-center justify-center text-2xl opacity-35">🌱</div>
                 </div>
               </motion.div>
 
@@ -220,7 +226,7 @@ export default function HeroSection() {
                 initial={{ opacity: 0, x: -16 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.6, duration: 0.6 }}
-                className={`${glass} absolute top-2 left-2 rounded-2xl px-3.5 py-2.5 text-white text-xs`}
+                className={`${glass} absolute top-2 left-2 rounded-2xl px-3.5 py-2.5 text-white text-xs hidden md:block`}
               >
                 <p className="font-black text-sm text-transparent bg-clip-text bg-gradient-to-b from-amber-200 to-amber-400">۱۰۰٪</p>
                 <p className="text-coffee-200/90 mt-0.5">ارگانیک</p>
@@ -231,7 +237,7 @@ export default function HeroSection() {
                 initial={{ opacity: 0, x: 16 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.8, duration: 0.6 }}
-                className={`${glass} absolute bottom-4 right-2 rounded-2xl px-3.5 py-2.5 text-white text-xs`}
+                className={`${glass} absolute bottom-4 right-2 rounded-2xl px-3.5 py-2.5 text-white text-xs hidden md:block`}
               >
                 <p className="font-black text-sm text-transparent bg-clip-text bg-gradient-to-b from-amber-200 to-amber-400">+۵۰</p>
                 <p className="text-coffee-200/90 mt-0.5">واریته</p>

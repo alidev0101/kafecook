@@ -35,8 +35,8 @@ export default function BrandPage() {
       />
 
       {/* Brand header */}
-      <div className="flex items-center gap-5 mb-8 p-6 bg-white rounded-2xl shadow-card">
-        <div className="w-16 h-16 rounded-xl bg-cream-50 flex items-center justify-center overflow-hidden flex-shrink-0 relative">
+      <div className="glass flex items-center gap-5 mb-8 p-6 rounded-3xl">
+        <div className="w-16 h-16 rounded-2xl bg-coffee-500/10 dark:bg-white/[0.06] border border-coffee-500/15 dark:border-white/10 flex items-center justify-center overflow-hidden flex-shrink-0 relative">
           {brand?.logo ? (
             <Image src={brand.logo} alt={brand.name} fill className="object-contain p-2" />
           ) : (
@@ -47,10 +47,10 @@ export default function BrandPage() {
           {brandLoading ? (
             <Skeleton className="h-7 w-36 mb-2" />
           ) : (
-            <h1 className="text-2xl font-black text-gray-900">{brand?.name}</h1>
+            <h1 className="font-morabba text-2xl font-black text-foreground">{brand?.name}</h1>
           )}
           {brand?.description && (
-            <p className="text-sm text-gray-500 mt-1 max-w-lg">{brand.description}</p>
+            <p className="text-sm text-muted-foreground mt-1 max-w-lg leading-relaxed">{brand.description}</p>
           )}
         </div>
       </div>

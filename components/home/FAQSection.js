@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -16,15 +16,23 @@ const faqs = [
 
 export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState(null);
+  const reduce = useReducedMotion();
 
   return (
-    <section className="py-16 md:py-20 bg-background">
-      <div className="container-custom max-w-3xl">
+    <section className="relative overflow-hidden py-16 md:py-20 bg-background">
+      {/* soft color behind the glass */}
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        <div className="absolute top-6 right-[16%] h-[300px] w-[300px] rounded-full bg-coffee-400/20 dark:bg-coffee-600/[0.14] blur-[110px]" />
+        <div className="absolute bottom-0 left-[14%] h-[300px] w-[300px] rounded-full bg-amber-300/20 dark:bg-amber-700/[0.12] blur-[110px]" />
+      </div>
+
+      <div className="container-custom max-w-3xl relative">
         <div className="text-center mb-10">
           <motion.h2
-            initial={{ opacity: 0, y: 16 }}
+            initial={reduce ? false : { opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
             className="section-title"
           >
             سوالات متداول
@@ -36,15 +44,15 @@ export default function FAQSection() {
           {faqs.map((faq, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 12 }}
+              initial={reduce ? false : { opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.06 }}
               className={cn(
-                "border rounded-2xl overflow-hidden transition-all duration-200",
+                "glass rounded-2xl overflow-hidden transition-all duration-200",
                 openIndex === i
-                  ? "border-coffee-300 dark:border-coffee-700 shadow-warm"
-                  : "border-border"
+                  ? "border-coffee-400/50 dark:border-coffee-400/30 shadow-[0_16px_36px_-16px_rgba(190,112,64,0.35)]"
+                  : ""
               )}
             >
               <button
@@ -54,7 +62,7 @@ export default function FAQSection() {
               >
                 <span className="font-semibold text-foreground text-sm">{faq.q}</span>
                 <motion.div animate={{ rotate: openIndex === i ? 180 : 0 }} transition={{ duration: 0.2 }}>
-                  <ChevronDown size={17} className={openIndex === i ? "text-coffee-600 dark:text-coffee-400" : "text-muted-foreground"} />
+                  <ChevronDown size={17} className={openIndex === i ? "text-coffee-600 dark:text-coffee-300" : "text-muted-foreground"} />
                 </motion.div>
               </button>
 
@@ -76,7 +84,7 @@ export default function FAQSection() {
         </div>
 
         <div className="text-center mt-8">
-          <Link href="/faq" className="text-sm text-coffee-600 dark:text-coffee-400 hover:underline font-medium">
+          <Link href="/faq" className="text-sm text-coffee-600 dark:text-coffee-300 hover:underline font-medium">
             مشاهده همه سوالات متداول
           </Link>
         </div>

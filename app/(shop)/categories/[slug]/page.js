@@ -34,19 +34,19 @@ export default function CategoryPage() {
         ]}
       />
 
-      <div className="mb-8">
+      <div className="glass rounded-3xl px-6 py-6 mb-8">
         {catLoading ? (
           <Skeleton className="h-8 w-48" />
         ) : (
           <>
-            <h1 className="text-2xl md:text-3xl font-black text-gray-900">
+            <h1 className="font-morabba text-2xl md:text-3xl font-black text-foreground">
               {category?.name}
             </h1>
             {category?.description && (
-              <p className="text-gray-500 text-sm mt-2">{category.description}</p>
+              <p className="text-muted-foreground text-sm mt-2 max-w-2xl leading-relaxed">{category.description}</p>
             )}
             {data?.pagination && (
-              <p className="text-sm text-gray-400 mt-1">
+              <p className="text-sm text-muted-foreground mt-2">
                 {formatNumber(data.pagination.total)} محصول
               </p>
             )}

@@ -27,11 +27,12 @@ export default function PostCard({ post, index = 0, featured = false }) {
     >
       <Link
         href={`/blog/${post.slug}`}
-        className="group block bg-card border border-border rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 h-full"
+        className="glass group block rounded-3xl overflow-hidden transition-all duration-300 h-full
+          hover:border-coffee-400/40 dark:hover:border-coffee-400/25"
         aria-label={post.title}
       >
         {/* Featured Image */}
-        <div className={`relative overflow-hidden bg-muted/30 ${featured ? "aspect-[16/7]" : "aspect-[16/9]"}`}>
+        <div className={`relative overflow-hidden bg-coffee-500/5 dark:bg-white/[0.04] m-2 mb-0 rounded-2xl ${featured ? "aspect-[16/7]" : "aspect-[16/9]"}`}>
           <Image
             src={post.featuredImage?.url || DEFAULT_IMG}
             alt={post.featuredImage?.alt || post.title}
@@ -43,9 +44,11 @@ export default function PostCard({ post, index = 0, featured = false }) {
             }
             onError={(e) => { e.currentTarget.src = DEFAULT_IMG; }}
           />
+          {/* soft inner sheen */}
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/[0.08] via-transparent to-black/10" />
           {/* Type badge */}
           <div className="absolute top-3 right-3">
-            <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full backdrop-blur-sm ${typeConfig.color}`}>
+            <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full backdrop-blur-md shadow-[inset_0_1px_0_0_rgba(255,255,255,0.4)] ${typeConfig.color}`}>
               {typeConfig.label}
             </span>
           </div>
@@ -53,7 +56,7 @@ export default function PostCard({ post, index = 0, featured = false }) {
           {post.category && (
             <div className="absolute bottom-3 right-3">
               <span
-                className="text-[11px] font-semibold px-2.5 py-1 rounded-full text-white"
+                className="text-[11px] font-semibold px-2.5 py-1 rounded-full text-white backdrop-blur-md"
                 style={{ backgroundColor: post.category.color || "#be7040" }}
               >
                 {post.category.name}
@@ -65,8 +68,7 @@ export default function PostCard({ post, index = 0, featured = false }) {
         {/* Content */}
         <div className="p-4 md:p-5 flex flex-col flex-1">
           <h2
-            className={`font-bold text-foreground group-hover:text-coffee-700 dark:group-hover:text-coffee-400 transition-colors leading-snug mb-2 line-clamp-2 ${featured ? "text-xl md:text-2xl" : "text-base"}`}
-            style={{ fontFamily: "Morabba, Vazirmatn, sans-serif" }}
+            className={`font-morabba font-bold text-foreground group-hover:text-coffee-700 dark:group-hover:text-coffee-200 transition-colors leading-snug mb-2 line-clamp-2 ${featured ? "text-xl md:text-2xl" : "text-base"}`}
           >
             {post.title}
           </h2>
@@ -78,10 +80,10 @@ export default function PostCard({ post, index = 0, featured = false }) {
           )}
 
           {/* Meta */}
-          <div className="flex items-center gap-3 text-xs text-muted-foreground mt-auto pt-3 border-t border-border flex-wrap">
+          <div className="flex items-center gap-3 text-xs text-muted-foreground mt-auto pt-3 border-t border-black/[0.06] dark:border-white/10 flex-wrap">
             {post.author?.name && (
               <span className="flex items-center gap-1">
-                <div className="w-5 h-5 rounded-full bg-coffee-100 dark:bg-coffee-900/30 flex items-center justify-center text-[10px] font-bold text-coffee-600">
+                <div className="w-5 h-5 rounded-full bg-gradient-to-b from-coffee-400 to-coffee-600 flex items-center justify-center text-[10px] font-bold text-white">
                   {post.author.name[0]}
                 </div>
                 {post.author.name}

@@ -31,7 +31,7 @@ export default function ThemeToggle({ className, size = "default" }) {
       aria-label={isDark ? "تغییر به حالت روز" : "تغییر به حالت شب"}
       className={cn(
         "relative rounded-xl transition-all duration-300 flex items-center justify-center",
-        "text-muted-foreground hover:text-foreground hover:bg-accent",
+        "hover:text-foreground hover:bg-accent",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         size === "sm" ? "w-8 h-8" : "w-10 h-10",
         className

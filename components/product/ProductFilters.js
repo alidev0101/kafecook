@@ -52,7 +52,7 @@ export default function ProductFilters({ filters, onFilterChange }) {
   const toggle = (key) => setOpen((p) => ({ ...p, [key]: !p[key] }));
 
   const Section = ({ id, title, children }) => (
-    <div className="border-b border-border last:border-0">
+    <div className="border-b border-black/[0.06] dark:border-white/[0.08] last:border-0">
       <button
         onClick={() => toggle(id)}
         className="w-full flex items-center justify-between py-3.5 text-sm font-semibold text-foreground"
@@ -68,19 +68,27 @@ export default function ProductFilters({ filters, onFilterChange }) {
     </div>
   );
 
+  const optionClass = (active) =>
+    cn(
+      "w-full text-right text-sm py-2 px-3 rounded-xl transition-all duration-200",
+      active
+        ? "bg-gradient-to-b from-coffee-400 to-coffee-600 text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.28),0_6px_16px_-6px_rgba(190,112,64,0.7)]"
+        : "text-muted-foreground hover:bg-white/50 dark:hover:bg-white/[0.06] hover:text-foreground"
+    );
+
   return (
-    <div className="bg-card border border-border rounded-2xl shadow-card p-5 sticky top-24">
-      <div className="flex items-center justify-between mb-4">
+    <div className="glass rounded-3xl p-5 sticky top-24">
+      <div className="flex items-center justify-between mb-3">
         <h3 className="font-bold text-foreground flex items-center gap-2 text-sm">
           <SlidersHorizontal
             size={16}
-            className="text-coffee-600 dark:text-coffee-400"
+            className="text-coffee-600 dark:text-coffee-300"
           />
           فیلترها
         </h3>
         <button
           onClick={() => onFilterChange({})}
-          className="text-xs text-coffee-600 dark:text-coffee-400 hover:underline"
+          className="text-xs text-coffee-600 dark:text-coffee-300 hover:underline"
         >
           پاک کردن
         </button>
@@ -93,12 +101,7 @@ export default function ProductFilters({ filters, onFilterChange }) {
             <button
               key={opt.value}
               onClick={() => onFilterChange({ sort: opt.value })}
-              className={cn(
-                "w-full text-right text-sm py-2 px-3 rounded-xl transition-colors",
-                filters.sort === opt.value
-                  ? "bg-coffee-600 dark:bg-coffee-500 text-white"
-                  : "text-muted-foreground hover:bg-accent hover:text-foreground"
-              )}
+              className={optionClass(filters.sort === opt.value)}
             >
               {opt.label}
             </button>
@@ -111,12 +114,7 @@ export default function ProductFilters({ filters, onFilterChange }) {
         <div className="space-y-1">
           <button
             onClick={() => onFilterChange({ category: "" })}
-            className={cn(
-              "w-full text-right text-sm py-2 px-3 rounded-xl transition-colors",
-              !filters.category
-                ? "bg-coffee-50 dark:bg-coffee-900/30 text-coffee-700 dark:text-coffee-300 font-medium"
-                : "text-muted-foreground hover:bg-accent"
-            )}
+            className={optionClass(!filters.category)}
           >
             همه دسته‌ها
           </button>
@@ -124,12 +122,7 @@ export default function ProductFilters({ filters, onFilterChange }) {
             <button
               key={cat._id}
               onClick={() => onFilterChange({ category: cat._id })}
-              className={cn(
-                "w-full text-right text-sm py-2 px-3 rounded-xl transition-colors",
-                filters.category === cat._id
-                  ? "bg-coffee-600 dark:bg-coffee-500 text-white"
-                  : "text-muted-foreground hover:bg-accent"
-              )}
+              className={optionClass(filters.category === cat._id)}
             >
               {cat.name}
             </button>
@@ -188,12 +181,7 @@ export default function ProductFilters({ filters, onFilterChange }) {
               onClick={() =>
                 onFilterChange({ minRating: filters.minRating == r ? "" : r })
               }
-              className={cn(
-                "w-full flex items-center gap-2 text-sm py-2 px-3 rounded-xl transition-colors",
-                filters.minRating == r
-                  ? "bg-coffee-600 dark:bg-coffee-500 text-white"
-                  : "text-muted-foreground hover:bg-accent"
-              )}
+              className={optionClass(filters.minRating == r)}
             >
               <span className="text-amber-400">{"★".repeat(r)}</span>
               <span>و بیشتر</span>

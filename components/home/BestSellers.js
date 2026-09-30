@@ -6,6 +6,7 @@ import axios from "axios";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import ProductGrid from "@/components/product/ProductGrid";
+import SectionHeader from "../shared/SectionHeader";
 
 /* shared glass surface — same as FeaturedCategories / ProductCard */
 const glass =
@@ -34,33 +35,11 @@ export default function BestSellers() {
 
       <div className="container-custom relative">
         {/* Header */}
-        <motion.div
-          initial={reduce ? false : { opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-          className="flex items-end justify-between gap-4 mb-9"
-        >
-          <div>
-            <h2 className="section-title">پرفروش‌ترین‌ها</h2>
-            <p className="section-subtitle">
-              محبوب‌ترین قهوه‌هایی که مشتریان عاشقشان هستند
-            </p>
-          </div>
-
-          <Link
-            href="/products?isBestSeller=true"
-            className={`${glass} group shrink-0 inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs sm:text-sm font-medium
-              text-coffee-700 dark:text-coffee-300 hover:border-coffee-400/40 transition-all duration-300`}
-          >
-            مشاهده همه
-            <ArrowLeft
-              size={14}
-              strokeWidth={1.75}
-              className="transition-transform duration-300 group-hover:-translate-x-1"
-            />
-          </Link>
-        </motion.div>
+        <SectionHeader
+          title="پرفروش‌ترین‌ها"
+          subtitle="محبوب‌ترین قهوه‌هایی که مشتریان عاشقشان هستند"
+          href="/products?isBestSeller=true"
+        />
 
         <ProductGrid products={data} loading={isLoading} />
       </div>

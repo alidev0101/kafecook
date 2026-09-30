@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 const faqs = [
@@ -39,42 +40,65 @@ const faqs = [
 ];
 
 export default function FAQPage() {
+    const reduce = useReducedMotion();
   const [openItem, setOpenItem] = useState(null);
 
   return (
     <div className="bg-background">
-      <div className="bg-coffee-gradient py-16 text-white text-center">
+      <div className="bg-coffee-gradient py-16 text-white text-center pt-24">
         <div className="container-custom">
-          <h1 className="text-4xl font-black mb-3">سوالات متداول</h1>
+          <h1 className="text-4xl font-black mb-3 moraba">سوالات متداول</h1>
           <p className="text-coffee-200">پاسخ سوالات رایج درباره کافه کوک</p>
         </div>
       </div>
 
-      <div className="container-custom py-16 max-w-3xl">
+      <div className="space-y-8 max-w-5xl mx-auto mt-20 px-2">
         {faqs.map((section) => (
-          <div key={section.category} className="mb-8">
-            <h2 className="text-lg font-bold text-gray-800 mb-4 pb-2 border-b border-gray-100">
+          <div key={section.category}>
+            <h2 className="text-lg font-bold text-coffee-500 dark:text-coffee-300 mb-4 pb-2 border-b border-gray-100 dark:border-gray-800 moraba">
               {section.category}
             </h2>
-            <div className="space-y-2">
+
+            <div className="space-y-3">
               {section.items.map((item, i) => {
                 const key = `${section.category}-${i}`;
                 const isOpen = openItem === key;
+
                 return (
-                  <div key={i} className={cn("border rounded-2xl overflow-hidden transition-all", isOpen ? "border-coffee-300 shadow-warm" : "border-gray-200")}>
+                  <motion.div
+                    key={i}
+                    initial={reduce ? false : { opacity: 0, y: 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.06 }}
+                    className={cn("glass rounded-2xl overflow-hidden transition-all duration-200", isOpen ? "border-coffee-400/50 dark:border-coffee-400/30 shadow-[0_16px_36px_-16px_rgba(190,112,64,0.35)]" : "")}
+                  >
                     <button
                       onClick={() => setOpenItem(isOpen ? null : key)}
                       className="w-full flex items-center justify-between p-5 text-right"
+                      aria-expanded={isOpen}
                     >
-                      <span className="font-semibold text-gray-800 text-sm">{item.q}</span>
-                      {isOpen ? <ChevronUp size={16} className="text-coffee-600 flex-shrink-0 mr-3" /> : <ChevronDown size={16} className="text-gray-400 flex-shrink-0 mr-3" />}
+                      <span className="font-semibold text-foreground text-sm">{item.q}</span>
+
+                      <motion.div animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
+                        <ChevronDown size={17} className={isOpen ? "text-coffee-600 dark:text-coffee-300" : "text-muted-foreground"} />
+                      </motion.div>
                     </button>
-                    {isOpen && (
-                      <div className="px-5 pb-5">
-                        <p className="text-sm text-gray-500 leading-relaxed">{item.a}</p>
-                      </div>
-                    )}
-                  </div>
+
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          key="content"
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.2, ease: "easeInOut" }}
+                        >
+                          <p className="px-5 pb-5 text-sm text-muted-foreground leading-relaxed">{item.a}</p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
                 );
               })}
             </div>

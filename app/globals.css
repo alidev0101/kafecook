@@ -99,11 +99,14 @@
   h3,
   .font-display,
   .heading {
-    font-family: "Morabba", "Dana", Tahoma, sans-serif;
+    font-family: "Dana";
   }
 
   .dana {
     font-family: "Dana" !important;
+  }
+  .moraba {
+    font-family: "Morabba" !important;
   }
 
   /* ─── Scrollbar ─────────────────────────────────────────────────────── */
@@ -148,7 +151,7 @@
 /* ─── Components ─────────────────────────────────────────────────────── */
 @layer components {
   .container-custom {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    @apply max-w-7xl mx-auto px-2 sm:px-6 lg:px-8;
   }
 
   /* ─── Buttons ─────────────────────────────────────────────────────── */
@@ -176,11 +179,52 @@
   /* ─── Section ─────────────────────────────────────────────────────── */
   .section-title {
     @apply text-2xl md:text-3xl font-bold text-foreground;
-    font-family: "Morabba", "Vazirmatn", sans-serif;
+    font-family: "Morabba", "Dana", Tahoma, sans-serif;
   }
 
   .section-subtitle {
     @apply text-muted-foreground text-sm md:text-base mt-2;
+  }
+
+  /* ─── Ambient page backdrop: fixed aurora orbs behind everything ───── */
+  .page-ambient {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .page-ambient::before,
+  .page-ambient::after {
+    content: "";
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(130px);
+  }
+
+  .page-ambient::before {
+    top: -180px;
+    right: -120px;
+    width: 560px;
+    height: 560px;
+    background: rgba(201, 139, 90, 0.22);
+  }
+
+  .page-ambient::after {
+    bottom: -200px;
+    left: -140px;
+    width: 520px;
+    height: 520px;
+    background: rgba(232, 188, 71, 0.16);
+  }
+
+  .dark .page-ambient::before {
+    background: rgba(146, 70, 44, 0.25);
+  }
+
+  .dark .page-ambient::after {
+    background: rgba(67, 43, 16, 0.35);
   }
 
   /* ─── Skeleton ─────────────────────────────────────────────────────── */
@@ -202,13 +246,78 @@
     @apply w-full px-4 py-2.5 rounded-xl border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-all duration-200 text-sm;
   }
 
-  /* ─── Glass effect ────────────────────────────────────────────────── */
+  /* ─── Glassmorphism system ───────────────────────────────────────────
+     Canonical glass surfaces. Everything on the storefront reuses these
+     so light and dark stay consistent. Panels sit on soft color orbs
+     rendered by the layout so the blur has something to catch.          */
   .glass {
-    @apply bg-white/80 backdrop-blur-md dark:bg-gray-900/80;
+    @apply bg-white bg-white/[0.045] backdrop-blur-3xl;
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.8),
+      0 12px 32px -16px rgba(90, 50, 20, 0.22);
   }
 
-  .glass-card {
-    @apply bg-white/90 backdrop-blur-sm border border-white/20 dark:bg-gray-900/90 dark:border-gray-700/30;
+  .dark .glass {
+    border-color: rgba(255, 255, 255, 0.09);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.09),
+      0 18px 40px -20px rgba(0, 0, 0, 0.65);
+  }
+
+  /* Stronger variant for hero bars / headers that overlap content */
+  .glass-strong {
+    @apply bg-background/50 backdrop-blur-xl;
+    border: 1px solid rgba(255, 255, 255, 0.103);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.9),
+      0 20px 44px -18px rgba(90, 50, 20, 0.3);
+  }
+
+  .dark .glass-strong {
+    border: 1px solid rgba(255, 255, 255, 0.185);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
+      0 24px 48px -20px rgba(0, 0, 0, 0.75);
+  }
+
+  /* Small pill / chip on glass */
+  .glass-chip {
+    @apply bg-white/55 dark:bg-white/[0.06] backdrop-blur-xl text-foreground;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.7);
+  }
+
+  .dark .glass-chip {
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+  }
+
+  /* Glass form input (storefront only) */
+  .glass-input {
+    @apply w-full bg-white/60 dark:bg-white/[0.05] backdrop-blur-xl text-foreground text-sm placeholder:text-muted-foreground rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-coffee-400/50 transition-all duration-200;
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.65);
+  }
+
+  .dark .glass-input {
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+  }
+
+  /* Frosted divider line */
+  .glass-divider {
+    height: 1px;
+    background: linear-gradient(to left, transparent, rgba(146, 70, 44, 0.35), transparent);
+  }
+
+  .dark .glass-divider {
+    background: linear-gradient(to left, transparent, rgba(216, 176, 136, 0.25), transparent);
+  }
+
+  /* Headings always Morabba */
+  .font-morabba {
+    font-family: "Morabba", "Dana", Tahoma, sans-serif;
   }
 
   /* ─── Admin Nav ──────────────────────────────────────────────────── */

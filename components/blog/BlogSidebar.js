@@ -10,9 +10,9 @@ import { DEFAULT_IMG } from "@/lib/constants";
 
 function SideSection({ title, icon: Icon, children }) {
   return (
-    <div className="bg-card border border-border rounded-2xl p-5">
+    <div className="glass rounded-3xl p-5">
       <h3 className="font-bold text-foreground mb-4 flex items-center gap-2 text-sm">
-        <Icon size={15} className="text-coffee-500" />
+        <Icon size={15} className="text-coffee-500 dark:text-coffee-300" />
         {title}
       </h3>
       {children}
@@ -49,7 +49,7 @@ export default function BlogSidebar({ currentSlug, categoryId }) {
           <div className="space-y-1.5">
             <Link
               href="/blog"
-              className="flex items-center justify-between py-1.5 px-2 rounded-xl text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+              className="flex items-center justify-between py-1.5 px-2 rounded-xl text-sm text-muted-foreground hover:bg-white/40 dark:hover:bg-white/[0.06] hover:text-foreground transition-colors"
             >
               <span>همه مقالات</span>
             </Link>
@@ -59,8 +59,8 @@ export default function BlogSidebar({ currentSlug, categoryId }) {
                 href={`/blog/category/${cat.slug}`}
                 className={`flex items-center justify-between py-1.5 px-2 rounded-xl text-sm transition-colors ${
                   categoryId === cat._id?.toString()
-                    ? "bg-coffee-50 dark:bg-coffee-900/20 text-coffee-700 dark:text-coffee-300 font-medium"
-                    : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                    ? "bg-coffee-500/10 dark:bg-white/[0.07] text-coffee-700 dark:text-coffee-200 font-medium"
+                    : "text-muted-foreground hover:bg-white/40 dark:hover:bg-white/[0.06] hover:text-foreground"
                 }`}
               >
                 <span className="flex items-center gap-2">
@@ -130,17 +130,19 @@ export default function BlogSidebar({ currentSlug, categoryId }) {
       )}
 
       {/* Tags CTA */}
-      <div className="bg-coffee-gradient rounded-2xl p-5 text-white text-center">
-        <div className="text-3xl mb-3">☕</div>
-        <h3 className="font-bold mb-2 text-sm" style={{ fontFamily: "Morabba, Vazirmatn, sans-serif" }}>
+      <div className="relative overflow-hidden rounded-3xl p-5 text-white text-center bg-gradient-to-br from-coffee-700 via-coffee-800 to-coffee-950 border border-white/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.14),0_24px_48px_-24px_rgba(60,30,10,0.7)]">
+        <div aria-hidden className="absolute -top-12 -left-10 h-36 w-36 rounded-full bg-amber-300/20 blur-3xl" />
+        <div aria-hidden className="absolute -bottom-12 -right-8 h-32 w-32 rounded-full bg-coffee-300/20 blur-3xl" />
+        <div className="relative text-3xl mb-3">☕</div>
+        <h3 className="relative font-morabba font-bold mb-2 text-sm">
           عاشق قهوه‌ای؟
         </h3>
-        <p className="text-coffee-200 text-xs mb-4 leading-relaxed">
+        <p className="relative text-coffee-200/85 text-xs mb-4 leading-relaxed">
           بهترین قهوه‌های تخصصی را از کافه کوک تجربه کن
         </p>
         <Link
           href="/products"
-          className="inline-flex items-center gap-2 bg-white text-coffee-800 text-xs font-bold px-4 py-2 rounded-xl hover:bg-cream-100 transition-colors"
+          className="relative inline-flex items-center gap-2 bg-white/95 text-coffee-800 text-xs font-bold px-4 py-2 rounded-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.9),0_10px_24px_-10px_rgba(0,0,0,0.5)] hover:bg-white hover:-translate-y-0.5 transition-all"
         >
           مشاهده محصولات
         </Link>

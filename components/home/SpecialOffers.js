@@ -109,7 +109,7 @@ export default function SpecialOffers() {
                 <ArrowLeft size={14} strokeWidth={1.75} className="transition-transform duration-300 group-hover:-translate-x-1" />
               </Link>
             </div>
-          </motion.div>
+          </motion.div> 
 
           {/* ── Two small banners ── */}
           <div className="grid grid-rows-2 gap-5">

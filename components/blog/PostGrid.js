@@ -38,8 +38,8 @@ export function PostGridSkeleton({ count = 6 }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="bg-card border border-border rounded-2xl overflow-hidden animate-pulse">
-          <div className="aspect-[16/9] bg-muted" />
+        <div key={i} className="glass rounded-3xl overflow-hidden animate-pulse">
+          <div className="aspect-[16/9] m-2 mb-0 rounded-2xl bg-muted/60" />
           <div className="p-5 space-y-3">
             <div className="h-5 bg-muted rounded-xl w-5/6" />
             <div className="h-3 bg-muted rounded-xl w-full" />

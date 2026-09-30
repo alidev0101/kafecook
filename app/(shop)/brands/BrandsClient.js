@@ -122,10 +122,11 @@ function GridCard({ brand, i }) {
     >
       <Link
         href={`/brands/${brand.slug}`}
-        className="group block rounded-2xl overflow-hidden border border-border bg-card shadow-card hover:shadow-card-hover transition-all duration-300"
+        className="glass group block rounded-3xl overflow-hidden transition-all duration-300
+          hover:border-coffee-400/40 dark:hover:border-coffee-400/25"
         aria-label={`برند ${brand.name}`}
       >
-        <div className="aspect-[4/3] relative bg-gradient-to-br from-coffee-50 to-cream-100 dark:from-coffee-950 dark:to-coffee-900 overflow-hidden">
+        <div className="aspect-[4/3] relative m-2 mb-0 rounded-2xl overflow-hidden bg-gradient-to-br from-coffee-100 to-cream-100 dark:from-coffee-900/60 dark:to-coffee-800/40">
           {brand.logo ? (
             <Image
               src={brand.logo}
@@ -136,10 +137,7 @@ function GridCard({ brand, i }) {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <span
-                className="text-4xl font-black text-coffee-400 group-hover:scale-110 transition-transform duration-300"
-                style={{ fontFamily: "Morabba, Vazirmatn, sans-serif" }}
-              >
+              <span className="font-morabba text-4xl font-black text-coffee-400 group-hover:scale-110 transition-transform duration-300">
                 {brand.name?.charAt(0)}
               </span>
             </div>
@@ -148,17 +146,14 @@ function GridCard({ brand, i }) {
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
           {brand.isFeatured && (
-            <div className="absolute top-2 right-2 bg-coffee-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+            <div className="absolute top-2 right-2 bg-gradient-to-b from-coffee-400 to-coffee-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-[0_6px_14px_-4px_rgba(190,112,64,0.7)]">
               ویژه
             </div>
           )}
         </div>
 
         <div className="p-4">
-          <h3
-            className="font-bold text-foreground text-sm group-hover:text-coffee-600 dark:group-hover:text-coffee-400 transition-colors"
-            style={{ fontFamily: "Morabba, Vazirmatn, sans-serif" }}
-          >
+          <h3 className="font-morabba font-bold text-foreground text-sm group-hover:text-coffee-700 dark:group-hover:text-coffee-200 transition-colors">
             {brand.name}
           </h3>
 
@@ -174,7 +169,7 @@ function GridCard({ brand, i }) {
             </p>
           )}
 
-          <div className="flex items-center justify-between mt-3 text-xs text-coffee-500 dark:text-coffee-400 font-medium">
+          <div className="flex items-center justify-between mt-3 text-xs text-coffee-600 dark:text-coffee-300 font-medium">
             <span>
               {brand.productsCount || 0} محصول
             </span>
@@ -200,9 +195,9 @@ function ListCard({ brand, i }) {
     >
       <Link
         href={`/brands/${brand.slug}`}
-        className="flex items-center gap-4 p-4 rounded-2xl bg-card border border-border hover:border-coffee-300 dark:hover:border-coffee-700 hover:shadow-card transition-all duration-200 group"
+        className="glass flex items-center gap-4 p-4 rounded-2xl hover:border-coffee-400/40 dark:hover:border-coffee-400/25 transition-all duration-200 group"
       >
-        <div className="w-14 h-14 rounded-2xl bg-coffee-50 dark:bg-coffee-900/30 flex items-center justify-center overflow-hidden relative flex-shrink-0">
+        <div className="w-14 h-14 rounded-2xl bg-coffee-500/10 dark:bg-white/[0.06] border border-coffee-500/15 dark:border-white/10 flex items-center justify-center overflow-hidden relative flex-shrink-0">
           {brand.logo ? (
             <Image
               src={brand.logo}
@@ -218,14 +213,11 @@ function ListCard({ brand, i }) {
         </div>
 
         <div className="flex-1 min-w-0">
-          <h3
-            className="font-bold text-foreground text-sm group-hover:text-coffee-600 dark:group-hover:text-coffee-400 transition-colors"
-            style={{ fontFamily: "Morabba, Vazirmatn, sans-serif" }}
-          >
+          <h3 className="font-morabba font-bold text-foreground text-sm group-hover:text-coffee-700 dark:group-hover:text-coffee-200 transition-colors">
             {brand.name}
 
             {brand.isFeatured && (
-              <span className="mr-2 text-[10px] bg-coffee-100 dark:bg-coffee-900/40 text-coffee-600 dark:text-coffee-400 px-1.5 py-0.5 rounded-full font-normal">
+              <span className="mr-2 text-[10px] bg-coffee-500/15 dark:bg-white/[0.07] text-coffee-700 dark:text-coffee-300 px-1.5 py-0.5 rounded-full font-normal">
                 ویژه
               </span>
             )}

@@ -22,15 +22,15 @@ function SearchContent() {
   });
 
   return (
-    <div className="container-custom py-8">
+    <div className="container-custom py-8 pt-20">
       <Breadcrumb items={[{ label: "جستجو" }]} />
 
-      <div className="flex items-center gap-3 mb-6 mt-2">
-        <div className="w-10 h-10 rounded-xl bg-coffee-100 dark:bg-coffee-900/30 flex items-center justify-center">
-          <Search size={20} className="text-coffee-600 dark:text-coffee-400" />
+      <div className="glass rounded-3xl px-5 sm:px-7 py-5 mb-7 mt-2 flex items-center gap-3">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-b from-coffee-400 to-coffee-600 flex items-center justify-center shadow-[inset_0_1px_0_0_rgba(255,255,255,0.28),0_8px_18px_-8px_rgba(190,112,64,0.7)] flex-shrink-0">
+          <Search size={20} className="text-white" />
         </div>
         <div>
-          <h1 className="text-xl font-bold text-foreground">
+          <h1 className="font-morabba text-xl font-black text-foreground">
             نتایج جستجو برای "{q}"
           </h1>
           {data?.pagination && (

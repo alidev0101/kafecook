@@ -63,7 +63,9 @@ export default function ProductDetailPage() {
     return (
       <div className="container-custom py-8 space-y-6">
         <div className="grid lg:grid-cols-2 gap-10">
-          <div className="aspect-square bg-muted rounded-3xl animate-pulse" />
+          <div className="glass rounded-[2rem] p-2.5">
+            <div className="aspect-square bg-coffee-500/5 dark:bg-white/[0.04] rounded-3xl animate-pulse" />
+          </div>
           <div className="space-y-4">
             {[80, 40, 100, 60, 100].map((w, i) => (
               <div key={i} className={`h-5 bg-muted rounded-xl animate-pulse w-${w ? "[" + w + "%]" : "full"}`} />
@@ -128,7 +130,8 @@ export default function ProductDetailPage() {
           {/* Gallery */}
           <div>
             {/* Main image */}
-            <div className="relative aspect-square rounded-3xl overflow-hidden bg-muted/30 dark:bg-muted/10 mb-3 group">
+            <div className="glass rounded-[2rem] p-2.5 mb-3 group">
+              <div className="relative aspect-square rounded-3xl overflow-hidden bg-coffee-500/5 dark:bg-white/[0.04]">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeImage}
@@ -149,11 +152,13 @@ export default function ProductDetailPage() {
                   />
                 </motion.div>
               </AnimatePresence>
+              {/* soft inner sheen */}
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/[0.08] via-transparent to-black/10" />
 
               {/* Discount badge */}
               {discount > 0 && (
                 <div className="absolute top-4 right-4">
-                  <Badge variant="discount" className="text-sm px-3 py-1">-{formatNumber(discount)}٪</Badge>
+                  <Badge variant="discount" className="text-sm px-3 py-1 shadow-[0_8px_18px_-6px_rgba(239,68,68,0.7)]">-{formatNumber(discount)}٪</Badge>
                 </div>
               )}
 
@@ -162,18 +167,19 @@ export default function ProductDetailPage() {
                 <>
                   <button
                     onClick={() => setActiveImage((p) => p > 0 ? p - 1 : product.images.length - 1)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-card/80 backdrop-blur-sm flex items-center justify-center shadow hover:bg-card transition-colors opacity-0 group-hover:opacity-100"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/70 dark:bg-white/10 backdrop-blur-md border border-white/70 dark:border-white/15 flex items-center justify-center shadow-[inset_0_1px_0_0_rgba(255,255,255,0.5),0_6px_16px_-6px_rgba(0,0,0,0.35)] hover:bg-white/90 dark:hover:bg-white/20 transition-colors opacity-0 group-hover:opacity-100"
                   >
                     <ChevronRight size={18} />
                   </button>
                   <button
                     onClick={() => setActiveImage((p) => p < product.images.length - 1 ? p + 1 : 0)}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-card/80 backdrop-blur-sm flex items-center justify-center shadow hover:bg-card transition-colors opacity-0 group-hover:opacity-100"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/70 dark:bg-white/10 backdrop-blur-md border border-white/70 dark:border-white/15 flex items-center justify-center shadow-[inset_0_1px_0_0_rgba(255,255,255,0.5),0_6px_16px_-6px_rgba(0,0,0,0.35)] hover:bg-white/90 dark:hover:bg-white/20 transition-colors opacity-0 group-hover:opacity-100"
                   >
                     <ChevronLeft size={18} />
                   </button>
                 </>
               )}
+              </div>
             </div>
 
             {/* Thumbnails */}
@@ -184,18 +190,21 @@ export default function ProductDetailPage() {
                     key={i}
                     whileTap={{ scale: 0.93 }}
                     onClick={() => setActiveImage(i)}
-                    className={`flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden border-2 transition-all ${
-                      activeImage === i ? "border-coffee-500" : "border-transparent hover:border-border"
+                    className={`glass flex-shrink-0 w-16 h-16 rounded-2xl p-1 overflow-hidden transition-all duration-200 ${
+                      activeImage === i
+                        ? "!border-coffee-400/60 shadow-[0_8px_20px_-8px_rgba(190,112,64,0.6)]"
+                        : "hover:border-coffee-300/40"
                     }`}
                   >
-                    <Image
-                      src={img.url}
-                      alt={`تصویر ${i + 1}`}
-                      width={64}
-                      height={64}
-                      className="object-cover w-full h-full"
-                      onError={(e) => { e.currentTarget.src = DEFAULT_IMG; }}
-                    />
+                    <div className="relative w-full h-full rounded-xl overflow-hidden bg-coffee-500/5 dark:bg-white/[0.04]">
+                      <Image
+                        src={img.url}
+                        alt={`تصویر ${i + 1}`}
+                        fill
+                        className="object-cover"
+                        onError={(e) => { e.currentTarget.src = DEFAULT_IMG; }}
+                      />
+                    </div>
                   </motion.button>
                 ))}
               </div>
@@ -215,10 +224,7 @@ export default function ProductDetailPage() {
               </p>
             )}
 
-            <h1
-              className="text-2xl md:text-3xl font-black text-foreground mb-3 leading-snug"
-              style={{ fontFamily: "Morabba, Vazirmatn, sans-serif" }}
-            >
+            <h1 className="font-morabba text-2xl md:text-3xl font-black text-foreground mb-3 leading-snug">
               {product.name}
             </h1>
 
@@ -249,9 +255,9 @@ export default function ProductDetailPage() {
                   { key: "origin",     label: "مبدأ",   val: product.coffeeAttributes.origin },
                   { key: "roastLevel", label: "رست",    val: ROAST_LABELS[product.coffeeAttributes.roastLevel] },
                   { key: "variety",    label: "واریته",  val: product.coffeeAttributes.variety },
-                  { key: "process",    label: "فرآیند",  val: product.coffeeAttributes.process },
+                  { key: "process",    label: "فرآیند", val: product.coffeeAttributes.process },
                 ].filter((a) => a.val).map(({ key, label, val }) => (
-                  <div key={key} className="bg-muted/50 dark:bg-muted/20 rounded-xl px-3 py-2 text-xs">
+                  <div key={key} className="glass-chip rounded-xl px-3 py-2 text-xs">
                     <span className="text-muted-foreground">{label}: </span>
                     <span className="font-medium text-foreground">{val}</span>
                   </div>
@@ -271,10 +277,10 @@ export default function ProductDetailPage() {
                       onClick={() => setSelectedVariantId(v._id)}
                       disabled={v.stock === 0}
                       className={cn(
-                        "px-4 py-2 rounded-xl border text-sm font-medium transition-all",
+                        "px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200",
                         (selectedVariantId === v._id || (!selectedVariantId && v._id === product.variants[0]._id))
-                          ? "border-coffee-500 bg-coffee-50 dark:bg-coffee-900/20 text-coffee-700 dark:text-coffee-300"
-                          : "border-border text-foreground hover:border-coffee-300",
+                          ? "bg-gradient-to-b from-coffee-400 to-coffee-600 text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.28),0_6px_16px_-6px_rgba(190,112,64,0.7)]"
+                          : "glass-chip text-foreground hover:border-coffee-400/40",
                         v.stock === 0 && "opacity-40 cursor-not-allowed line-through"
                       )}
                     >
@@ -307,17 +313,17 @@ export default function ProductDetailPage() {
             {/* Add to cart */}
             <div className="flex gap-3 mb-5">
               {!isOutOfStock && (
-                <div className="flex items-center gap-1 bg-muted rounded-xl p-1">
+                <div className="glass flex items-center gap-1 rounded-xl p-1">
                   <button
                     onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                    className="w-9 h-9 rounded-lg hover:bg-card flex items-center justify-center transition-colors text-muted-foreground hover:text-foreground"
+                    className="w-9 h-9 rounded-lg hover:bg-white/50 dark:hover:bg-white/[0.06] flex items-center justify-center transition-colors text-muted-foreground hover:text-foreground"
                   >
                     <Minus size={15} />
                   </button>
                   <span className="w-10 text-center font-bold text-foreground">{quantity}</span>
                   <button
                     onClick={() => setQuantity((q) => Math.min(stock, q + 1))}
-                    className="w-9 h-9 rounded-lg hover:bg-card flex items-center justify-center transition-colors text-muted-foreground hover:text-foreground"
+                    className="w-9 h-9 rounded-lg hover:bg-white/50 dark:hover:bg-white/[0.06] flex items-center justify-center transition-colors text-muted-foreground hover:text-foreground"
                   >
                     <Plus size={15} />
                   </button>
@@ -327,7 +333,7 @@ export default function ProductDetailPage() {
                 onClick={handleAddToCart}
                 disabled={isOutOfStock}
                 size="lg"
-                className="flex-1"
+                className="flex-1 !bg-gradient-to-b !from-coffee-400 !to-coffee-600 hover:!from-coffee-300 hover:!to-coffee-500 !shadow-[inset_0_1px_0_0_rgba(255,255,255,0.28),0_10px_24px_-8px_rgba(190,112,64,0.7)] !rounded-2xl"
               >
                 <ShoppingCart size={17} />
                 {isOutOfStock ? "ناموجود" : "افزودن به سبد"}
@@ -339,10 +345,10 @@ export default function ProductDetailPage() {
                   toast.success(wishlisted ? "از علاقه‌مندی‌ها حذف شد" : "به علاقه‌مندی‌ها اضافه شد");
                 }}
                 className={cn(
-                  "w-12 h-12 rounded-xl border flex items-center justify-center transition-all",
+                  "w-12 h-12 rounded-2xl border flex items-center justify-center transition-all",
                   wishlisted
-                    ? "border-red-300 bg-red-50 dark:bg-red-900/20 text-red-500"
-                    : "border-border text-muted-foreground hover:border-coffee-300 hover:text-coffee-600"
+                    ? "border-red-300 bg-red-500/15 text-red-500"
+                    : "glass text-muted-foreground hover:border-coffee-400/40 hover:text-coffee-600 dark:hover:text-coffee-300"
                 )}
               >
                 <Heart size={19} className={wishlisted ? "fill-red-500" : ""} />
@@ -350,7 +356,7 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Trust */}
-            <div className="flex flex-wrap gap-4 text-xs text-muted-foreground border-t border-border pt-4">
+            <div className="flex flex-wrap gap-4 text-xs text-muted-foreground border-t border-black/[0.06] dark:border-white/10 pt-4">
               <span className="flex items-center gap-1.5"><Truck size={13} className="text-blue-500" /> ارسال سریع</span>
               <span className="flex items-center gap-1.5"><Shield size={13} className="text-green-500" /> ضمانت اصالت</span>
               <span className="flex items-center gap-1.5"><RefreshCw size={13} className="text-purple-500" /> ۷ روز مرجوعی</span>
@@ -360,16 +366,16 @@ export default function ProductDetailPage() {
 
         {/* ── Tabs ── */}
         <div className="mt-12">
-          <div className="flex gap-1 border-b border-border overflow-x-auto scrollbar-hide">
+          <div className="glass inline-flex gap-1 rounded-2xl p-1.5 max-w-full overflow-x-auto scrollbar-hide">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
-                  "px-5 py-3 text-sm font-medium whitespace-nowrap border-b-2 -mb-px transition-all duration-200",
+                  "px-4 sm:px-5 py-2.5 text-sm font-medium whitespace-nowrap rounded-xl transition-all duration-200",
                   activeTab === tab.id
-                    ? "border-coffee-600 dark:border-coffee-400 text-coffee-700 dark:text-coffee-300"
-                    : "border-transparent text-muted-foreground hover:text-foreground"
+                    ? "bg-gradient-to-b from-coffee-400 to-coffee-600 text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.28),0_6px_14px_-6px_rgba(190,112,64,0.7)]"
+                    : "text-muted-foreground hover:text-foreground hover:bg-white/40 dark:hover:bg-white/[0.05]"
                 )}
               >
                 {tab.label}
@@ -437,8 +443,8 @@ export default function ProductDetailPage() {
 
         {/* ── Related ── */}
         {related?.filter((p) => p._id !== product._id).length > 0 && (
-          <div className="mt-6 pt-8 border-t border-border">
-            <h2 className="text-xl font-black text-foreground mb-6" style={{ fontFamily: "Morabba, Vazirmatn, sans-serif" }}>
+          <div className="mt-6 pt-8 border-t border-black/[0.06] dark:border-white/10">
+            <h2 className="font-morabba text-xl font-black text-foreground mb-6">
               محصولات مشابه
             </h2>
             <ProductGrid products={related.filter((p) => p._id !== product._id).slice(0, 4)} />
@@ -451,16 +457,16 @@ export default function ProductDetailPage() {
 
 function AttrRow({ label, value, isBar }) {
   return (
-    <div className="flex items-center gap-4 p-3 bg-muted/40 dark:bg-muted/20 rounded-xl">
+    <div className="glass flex items-center gap-4 p-3 rounded-2xl">
       <span className="text-sm text-muted-foreground w-24 flex-shrink-0">{label}</span>
       {isBar ? (
         <div className="flex-1 flex items-center gap-2">
-          <div className="flex-1 h-2 bg-border rounded-full overflow-hidden">
+          <div className="flex-1 h-2 bg-coffee-900/10 dark:bg-white/10 rounded-full overflow-hidden">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${(value / 5) * 100}%` }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="h-full bg-coffee-500 dark:bg-coffee-400 rounded-full"
+              className="h-full bg-gradient-to-l from-coffee-400 to-coffee-600 rounded-full"
             />
           </div>
           <span className="text-xs font-medium text-foreground w-8 text-left">{value}/5</span>

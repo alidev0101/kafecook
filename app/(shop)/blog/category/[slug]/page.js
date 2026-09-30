@@ -37,7 +37,7 @@ function CategoryContent() {
   });
 
   return (
-    <div className="container-custom py-8">
+    <div className="container-custom py-8 pt-24">
       <Breadcrumb
         items={[
           { label: "وبلاگ", href: "/blog" },

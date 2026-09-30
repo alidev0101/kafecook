@@ -21,7 +21,7 @@ export default function ContactPage() {
   return (
     <div className="bg-background">
       {/* Hero */}
-      <div className="bg-coffee-gradient py-16 text-white text-center">
+      <div className="bg-coffee-gradient py-16 text-white text-center pt-28">
         <div className="container-custom">
           <h1 className="text-4xl font-black mb-3">تماس با ما</h1>
           <p className="text-coffee-200">در خدمت شما هستیم</p>

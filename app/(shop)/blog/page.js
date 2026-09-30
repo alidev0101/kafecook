@@ -50,12 +50,11 @@ function BlogContent() {
       <Breadcrumb items={[{ label: "وبلاگ" }]} />
 
       {/* Hero */}
-      <div className="text-center mb-10 mt-2">
+      <div className="text-center mb-10 mt-2 pt-16">
         <motion.h1
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-3xl md:text-4xl font-black text-foreground mb-3"
-          style={{ fontFamily: "Morabba, Vazirmatn, sans-serif" }}
+          className="font-morabba text-3xl md:text-4xl font-black text-foreground mb-3"
         >
           وبلاگ کافه کوک
         </motion.h1>
@@ -72,16 +71,16 @@ function BlogContent() {
       {/* Search + Sort bar */}
       <div className="flex flex-col sm:flex-row gap-3 mb-8">
         <form onSubmit={handleSearch} className="flex-1 relative max-w-md">
-          <Search size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+          <Search size={16} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
           <input
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder="جستجو در مقالات..."
-            className="input-custom pr-9 pl-9"
+            className="glass-input pr-10 pl-9 h-11"
           />
           {searchInput && (
             <button type="button" onClick={() => { setSearchInput(""); router.push("/blog"); }}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
               <X size={14} />
             </button>
           )}
@@ -90,7 +89,7 @@ function BlogContent() {
         <select
           value={sort}
           onChange={(e) => router.push(`/blog?${buildQS({ sort: e.target.value, page: 1 })}`, { scroll: false })}
-          className="h-11 px-3 rounded-xl border border-input bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+          className="glass-input h-11 !w-auto"
         >
           {SORT_OPTIONS.map((o) => (
             <option key={o.value} value={o.value}>{o.label}</option>
