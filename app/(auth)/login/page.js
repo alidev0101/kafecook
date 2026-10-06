@@ -10,6 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Mail, Lock, ArrowLeft } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
+import { useWishlistStore } from "@/store/wishlistStore";
 import { toast } from "sonner";
 import { loginSchema } from "@/validations/auth";
 import Button from "@/components/ui/Button";
@@ -20,6 +21,7 @@ function LoginForm() {
   const router = useRouter();
   const callbackUrl = useSearchParams().get("callbackUrl") || "/";
   const fetchCart = useCartStore((state) => state.fetchCart);
+  const fetchWishlist = useWishlistStore((state) => state.fetchWishlist);
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(loginSchema),
@@ -33,6 +35,8 @@ function LoginForm() {
         toast.error(result.error || "ایمیل یا رمز عبور اشتباه است");
       } else {
         await fetchCart();
+        await fetchWishlist();
+        
         toast.success("خوش آمدید!");
         router.push(callbackUrl);
         router.refresh();
@@ -49,7 +53,7 @@ function LoginForm() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-8"
+      className="bg-white/5 border border-white/10 rounded-3xl p-8"
     >
       <h1 className="text-2xl font-black text-white text-center mb-1.5"
         style={{ fontFamily: "Morabba, Vazirmatn, sans-serif" }}>

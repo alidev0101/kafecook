@@ -69,10 +69,10 @@ function ProductsContent() {
 
   return (
     <div className="container-custom py-6 pt-20">
-      <Breadcrumb items={[{ label: "محصولات" }]} />
+      
 
-      <div className="glass rounded-3xl px-5 sm:px-7 py-5 mb-7 mt-2 flex items-center justify-between gap-4">
-        <div>
+      <div className="glass rounded-2xl px-5 sm:px-7 py-5 mb-3 mt-2 flex items-center justify-between gap-4">
+        {/* <div>
           <h1 className="font-morabba text-2xl font-black text-foreground">
             همه محصولات
           </h1>
@@ -81,7 +81,9 @@ function ProductsContent() {
               {formatNumber(data.pagination.total)} محصول برای شما پیدا شد
             </p>
           )}
-        </div>
+        </div> */}
+
+        <Breadcrumb items={[{ label: "محصولات" }]} />
 
         <Button
           variant="secondary"
@@ -110,6 +112,7 @@ function ProductsContent() {
           <ProductGrid
             products={data?.data}
             loading={isLoading}
+            enableSlider={false}
             emptyMessage="هیچ محصولی با این فیلترها یافت نشد"
           />
           {data?.pagination && (

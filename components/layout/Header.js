@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils";
 import { useCartStore } from "@/store/cartStore";
 import ThemeToggle from "@/components/shared/ThemeToggle";
 import SearchBar from "@/components/shared/SearchBar";
+import { useWishlistStore } from "@/store/wishlistStore";
 
 const navLinks = [
   { href: "/", label: "خانه" },
@@ -44,6 +45,7 @@ export default function Header() {
   const pathname = usePathname();
   const userMenuRef = useRef(null);
   const itemsCount = useCartStore((s) => s.getItemsCount());
+  const itemsCountLikes = useWishlistStore((s) => s.getItemsCount());
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -78,7 +80,10 @@ export default function Header() {
 
   return (
     <>
-      <header
+      <motion.header
+        initial={{ opacity: 0, y: -80 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         className={cn(
           "fixed top-0 right-0 left-0 z-40 pt-3 transition-all duration-300"
         )}
@@ -86,7 +91,8 @@ export default function Header() {
         <div className="container-custom">
           <div
             className={cn(
-              "relative rounded-2xl transition-all duration-300 glass-strong shadow-[0_18px_40px_-20px_rgba(60,30,10,0.45)]")}
+              "relative rounded-2xl transition-all duration-300 glass-strong shadow-[0_18px_40px_-20px_rgba(60,30,10,0.45)]"
+            )}
           >
             <div className="flex items-center justify-between gap-3 px-3 sm:px-4 py-2.5">
               {/* ── Logo ── */}
@@ -94,8 +100,14 @@ export default function Header() {
                 href="/"
                 className="flex items-center gap-2 flex-shrink-0 group"
               >
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-b from-coffee-400 to-coffee-600 flex items-center justify-center shadow-[inset_0_1px_0_0_rgba(255,255,255,0.3),0_8px_18px_-8px_rgba(190,112,64,0.7)] group-hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.3),0_10px_24px_-8px_rgba(190,112,64,0.8)] transition-shadow">
-                  <Coffee size={18} className="text-white" />
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center shadow-[inset_0_1px_0_0_rgba(255,255,255,0.3),0_8px_18px_-8px_rgba(190,112,64,0.7)] group-hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.3),0_10px_24px_-8px_rgba(190,112,64,0.8)] transition-shadow">
+                  {/* <Coffee size={18} className="text-white" /> */}
+                  <Image
+                    src={"/icons/icon-72x72.png"}
+                    alt={"کافه کوک"}
+                    width={25}
+                    height={25}
+                  />
                 </div>
                 <div className="hidden sm:block">
                   <p className="font-morabba text-lg font-black text-coffee-800 dark:text-coffee-200 leading-tight">
@@ -117,10 +129,10 @@ export default function Header() {
                     key={link.href}
                     href={link.href}
                     className={cn(
-                      "relative px-3 py-2 text-md font-medium rounded-xl transition-all duration-200 text-coffee-900 dark:text-coffee-100",
+                      "relative px-3 py-2 text-sm rounded-xl transition-all duration-200 text-coffee-900 dark:text-coffee-100",
                       isActive(link.href)
                         ? " bg-coffee-500/10 dark:bg-white/[0.07] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.35)] dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]"
-                        : " hover:text-foreground hover:bg-white/40 dark:hover:bg-white/[0.05]"
+                        : " hover:text-foreground hover:bg-coffee-200/40 dark:hover:bg-white/[.1]"
                     )}
                   >
                     {link.label}
@@ -147,9 +159,22 @@ export default function Header() {
                   <Link
                     href="/wishlist"
                     aria-label="علاقه‌مندی‌ها"
-                    className="hidden sm:block p-2.5 rounded-xl hover:text-foreground hover:bg-accent transition-all"
+                    className="relative hidden sm:block p-2.5 rounded-xl hover:text-foreground hover:bg-accent transition-all"
                   >
                     <Heart size={19} />
+                    <AnimatePresence>
+                    {mounted && itemsCountLikes > 0 && (
+                      <motion.span
+                        key="cart-badge"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        exit={{ scale: 0 }}
+                        className="absolute -top-0.5 -left-0.5 w-5 h-5 bg-gradient-to-b from-coffee-400 to-coffee-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-[0_4px_10px_-3px_rgba(190,112,64,0.8)]"
+                      >
+                        {itemsCountLikes > 9 ? "۹+" : itemsCountLikes}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
                   </Link>
                 )}
 
@@ -219,7 +244,7 @@ export default function Header() {
                           animate={{ opacity: 1, y: 0, scale: 1 }}
                           exit={{ opacity: 0, y: 6, scale: 0.96 }}
                           transition={{ duration: 0.15, ease: "easeOut" }}
-                          className="bg-background absolute left-0 top-full mt-4 w-52 rounded-2xl py-1.5 z-50"
+                          className="bg-background absolute left-0 top-full mt-4 w-52 rounded-2xl py-1.5 z-50  border border-coffee-400"
                         >
                           {/* User info */}
                           <div className="px-4 py-2.5 border-b border-black/[0.06] dark:border-white/10 mb-1">
@@ -369,7 +394,7 @@ export default function Header() {
             </AnimatePresence>
           </div>
         </div>
-      </header>
+      </motion.header>
 
       {/* Search Overlay */}
       <AnimatePresence>

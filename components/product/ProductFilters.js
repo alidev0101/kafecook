@@ -77,7 +77,7 @@ export default function ProductFilters({ filters, onFilterChange }) {
     );
 
   return (
-    <div className="glass rounded-3xl p-5 sticky top-24">
+    <div className="glass rounded-2xl p-5 sticky top-24">
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-bold text-foreground flex items-center gap-2 text-sm">
           <SlidersHorizontal

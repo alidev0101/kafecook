@@ -26,6 +26,7 @@ const defaultCats = [
   { _id: "4", name: "کولد برو", slug: "cold-brew" },
   { _id: "5", name: "قهوه ویژه", slug: "specialty" },
   { _id: "6", name: "هدیه قهوه", slug: "gift-sets" },
+  { _id: "7", name: "کافه کوک", slug: "gift-moka" },
 ];
 
 /* slug → lucide icon. Unknown slugs fall back to Coffee */
@@ -87,7 +88,6 @@ function CategoryCard({ cat }) {
       <div
         className="relative flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center overflow-hidden rounded-2xl
           bg-coffee-500/10 dark:bg-white/[0.06]
-          border border-coffee-500/15 dark:border-white/10
           text-coffee-600 dark:text-coffee-300
           group-hover:bg-gradient-to-br group-hover:from-coffee-400 group-hover:to-coffee-600
           group-hover:text-white group-hover:border-transparent
@@ -124,12 +124,13 @@ export default function FeaturedCategories() {
   const items = cats?.length ? cats : defaultCats;
 
   return (
-    <section className="relative overflow-hidden py-16 md:py-24 bg-muted/30 dark:bg-background">
-      {/* soft color behind the glass so the blur has something to catch */}
-      <div aria-hidden className="pointer-events-none absolute inset-0">
+    <section className="relative pt-16 md:pt-24 pb-10 dark:bg-background overflow-x-hidden md:overflow-x-visible">
+      {/* Glow layer */}
+      <div aria-hidden className="pointer-events-none absolute overflow-visible">
         <div className="absolute -top-20 right-[8%] h-[360px] w-[360px] rounded-full bg-coffee-400/20 dark:bg-coffee-600/[0.14] blur-[100px]" />
-        <div className="absolute -bottom-24 left-[6%] h-[320px] w-[320px] rounded-full bg-amber-300/25 dark:bg-amber-700/[0.12] blur-[100px]" />
+        <div className="absolute -bottom-24 left-[6%] h-[320px] w-[320px] rounded-full bg-coffee-300/50 dark:bg-coffee-700/[0.12] blur-[100px] z-10" />
       </div>
+
 
       <div className="container-custom relative">
         {/* Header */}

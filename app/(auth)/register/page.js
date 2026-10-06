@@ -98,7 +98,7 @@ export default function RegisterPage() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-8"
+      className="bg-white/5 border border-white/10 rounded-3xl p-8"
     >
       <h1
         className="text-2xl font-black text-white text-center mb-1.5"

@@ -78,7 +78,7 @@ export const GET = apiHandler(async (req) => {
       .populate("category", "name slug")
       .populate("brand", "name slug logo")
       .select(
-        "name slug images basePrice baseComparePrice averageRating reviewsCount isActive isFeatured isNew isBestSeller variants category brand soldCount createdAt"
+        "name slug images basePrice baseComparePrice averageRating reviewsCount isActive isFeatured isNew isBestSeller variants category brand description soldCount createdAt"
       )
       .sort(sort)
       .skip(skip)

@@ -13,30 +13,23 @@ import { DEFAULT_IMG } from "@/lib/constants";
 
 /* shared glass surface — same as FeaturedCategories */
 const glass =
-  "bg-white/60 dark:bg-white/[0.04] backdrop-blur-xl " +
+  "bg-coffee-100/50 dark:bg-white/[0.04] backdrop-blur-xl" +
   "border border-white/80 dark:border-white/[0.08] " +
   "shadow-[inset_0_1px_0_0_rgba(255,255,255,0.75),0_12px_32px_-16px_rgba(90,50,20,0.22)] " +
   "dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08),0_18px_40px_-20px_rgba(0,0,0,0.65)]";
 
-/* cursor-follow spotlight: writes --x / --y onto the card */
-function trackPointer(e) {
-  const r = e.currentTarget.getBoundingClientRect();
-  e.currentTarget.style.setProperty("--x", `${e.clientX - r.left}px`);
-  e.currentTarget.style.setProperty("--y", `${e.clientY - r.top}px`);
-}
 
 export default function ProductCard({ product, className }) {
-  const reduce = useReducedMotion();
-  const { addItem, items }       = useCartStore();
+  const { addItem, items } = useCartStore();
   const { toggle, isWishlisted } = useWishlistStore();
 
-  const image        = product.images?.find((i) => i.isPrimary) || product.images?.[0];
+  const image = product.images?.find((i) => i.isPrimary) || product.images?.[0];
   const firstVariant = product.variants?.[0];
-  const price        = firstVariant?.price   ?? product.basePrice         ?? 0;
+  const price = firstVariant?.price ?? product.basePrice ?? 0;
   const comparePrice = firstVariant?.comparePrice ?? product.baseComparePrice ?? null;
-  const discount     = calcDiscount(comparePrice, price);
-  const inCart       = items.some((i) => i.productId === product._id?.toString());
-  const wishlisted   = isWishlisted(product._id?.toString());
+  const discount = calcDiscount(comparePrice, price);
+  const inCart = items.some((i) => i.productId === product._id?.toString());
+  const wishlisted = isWishlisted(product._id?.toString());
   const isOutOfStock = product.variants?.length > 0 && product.variants.every((v) => v.stock === 0);
 
   const handleAddToCart = (e) => {
@@ -49,11 +42,11 @@ export default function ProductCard({ product, className }) {
       price,
       comparePrice,
       productSnapshot: {
-        name:        product.name,
-        image:       image?.url || null,
-        slug:        product.slug,
+        name: product.name,
+        image: image?.url || null,
+        slug: product.slug,
         weightLabel: firstVariant?.weightLabel,
-        grindLabel:  firstVariant?.grindLabel,
+        grindLabel: firstVariant?.grindLabel,
       },
     });
     toast.success(`${product.name} به سبد اضافه شد`);
@@ -68,18 +61,15 @@ export default function ProductCard({ product, className }) {
 
   return (
     <motion.div
-      whileHover={reduce ? undefined : { y: -4 }}
       transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-      className={cn("group", className)}
+      className={cn("group relative", className)}
     >
       <Link
         href={`/products/${product.slug}`}
-        onMouseMove={trackPointer}
         aria-label={product.name}
         className={cn(
           glass,
-          "relative flex flex-col h-full overflow-hidden rounded-3xl",
-          "hover:border-coffee-400/40 dark:hover:border-coffee-400/25 transition-colors duration-300"
+          "relative flex flex-col h-full rounded-3xl inverted-radius !overflow-visible"
         )}
       >
         {/* spotlight */}
@@ -108,17 +98,19 @@ export default function ProductCard({ product, className }) {
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/[0.10] via-transparent to-black/10" />
 
             {/* Badges */}
-            <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5">
-              {discount > 0 && <Badge variant="discount">-{formatNumber(discount)}٪</Badge>}
-              {product.isNew && !discount && <Badge variant="new">جدید</Badge>}
+            <div className="absolute top-2.5 left-2.5 flex flex-col gap-1.5">
+              {discount > 0 && <Badge variant="discount" darkmode={false}>- {formatNumber(discount)}٪</Badge>}
+
+              {product.isNew && !discount && <Badge variant="new" darkmode={false}>جدید</Badge>}
+
               {product.isBestSeller && !discount && !product.isNew && (
-                <Badge variant="gold">پرفروش</Badge>
+                <Badge variant="gold" darkmode={false}>پرفروش</Badge>
               )}
-              {isOutOfStock && <Badge variant="outOfStock">ناموجود</Badge>}
+              {isOutOfStock && <Badge variant="outOfStock" darkmode={false}>ناموجود</Badge>}
             </div>
 
             {/* Quick actions */}
-            <div className="absolute top-2.5 left-2.5 flex flex-col gap-1.5 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200">
+            <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200">
               <motion.button
                 whileTap={{ scale: 0.85 }}
                 onClick={handleWishlist}
@@ -133,16 +125,32 @@ export default function ProductCard({ product, className }) {
               >
                 <Heart size={14} strokeWidth={1.75} className={wishlisted ? "fill-white" : ""} />
               </motion.button>
-
-              {/* <Link
-                href={`/products/${product.slug}`}
-                onClick={(e) => e.stopPropagation()}
-                aria-label="مشاهده سریع"
-                className="w-8 h-8 rounded-full bg-card/90 backdrop-blur-sm flex items-center justify-center shadow-sm text-muted-foreground hover:bg-card hover:text-foreground transition-all"
-              >
-                <Eye size={14} />
-              </Link> */}
             </div>
+
+            <div className="absolute bottom-2.5 left-2.5 flex flex-col gap-1.5 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200">
+              <div className="flex items-center gap-2">
+                {/* Rating */}
+                {product.reviewsCount > 0 && (
+                  <div>
+                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 border border-amber-200/70 px-2 py-0.5">
+                      <Star size={11} className="fill-amber-400 text-amber-400 mb-1" />
+                      <span className="text-xs text-amber-700">
+                        {product.averageRating?.toFixed(1)}
+                        <span className="opacity-60 mr-0.5">({formatNumber(product.reviewsCount)})</span>
+                      </span>
+                    </span>
+                  </div>
+                )}
+
+                {/* Brand */}
+                {product.brand?.name && (
+                  <p className="text-[11px] text-coffee-700 bg-coffee-50 border border-coffee-200/70 px-2 py-0.5 rounded-full font-bold truncate">
+                    {product.brand.name}
+                  </p>
+                )}
+              </div>
+            </div>
+
 
             {/* Out of stock overlay */}
             {isOutOfStock && (
@@ -157,75 +165,61 @@ export default function ProductCard({ product, className }) {
 
         {/* ── Content ── */}
         <div className="relative z-10 px-4 pt-3.5 pb-4 flex flex-col flex-1">
-          {/* Brand */}
-          {product.brand?.name && (
-            <p className="text-[11px] text-coffee-600 dark:text-coffee-300/90 font-medium mb-1 truncate">
-              {product.brand.name}
-            </p>
-          )}
 
           {/* Name */}
-          <h3
-            className="text-sm font-semibold text-foreground/95 line-clamp-2 mb-2 leading-snug flex-1"
-            style={{ fontFamily: "Morabba, Vazirmatn, sans-serif" }}
-          >
+          <h3 className="text-md font-semibold text-foreground/95 line-clamp-1 mb-1 leading-snug">
             {product.name}
           </h3>
-
-          {/* Rating */}
-          {product.reviewsCount > 0 && (
-            <div className="mb-2.5">
-              <span className="inline-flex items-center gap-1 rounded-full bg-amber-400/10 dark:bg-amber-300/10 px-2 py-0.5">
-                <Star size={11} className="fill-amber-400 text-amber-400" />
-                <span className="text-xs text-muted-foreground">
-                  {product.averageRating?.toFixed(1)}
-                  <span className="opacity-60 mr-0.5">({formatNumber(product.reviewsCount)})</span>
-                </span>
-              </span>
-            </div>
-          )}
-
-          {/* Price + Cart btn */}
-          <div className="flex items-center justify-between mt-auto pt-3 border-t border-black/[0.06] dark:border-white/10">
-            <div>
-              {comparePrice > price && (
-                <p className="text-[11px] text-muted-foreground line-through mb-0.5">
-                  {formatPrice(comparePrice)}
-                </p>
-              )}
-              <p
-                className={cn(
-                  "text-sm font-bold",
-                  isOutOfStock ? "text-muted-foreground" : "text-coffee-700 dark:text-coffee-300"
-                )}
-              >
-                {isOutOfStock ? "ناموجود" : formatPrice(price)}
+          <p className="text-xs text-foreground/70 line-clamp-2 mb-2 leading-snug">
+            {product.description}
+          </p>
+          {/* Price */}
+          <div className="mt-auto flex h-12 min-h-12 flex-col justify-end gap-0.5 pt-2">
+            {comparePrice > price ? (
+              <p className="text-[10px] sm:text-[11px] text-red-600/70 line-through whitespace-nowrap leading-4">
+                {formatPrice(comparePrice)}
               </p>
-            </div>
+            ) : (
+              <div className="h-4" />
+            )}
 
-            <motion.button
-              whileTap={{ scale: 0.88 }}
-              onClick={handleAddToCart}
-              disabled={isOutOfStock}
-              aria-label="افزودن به سبد"
+            <p
               className={cn(
-                "w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200",
+                "text-xs sm:text-sm font-bold whitespace-nowrap leading-5",
                 isOutOfStock
-                  ? "bg-muted/70 text-muted-foreground cursor-not-allowed"
-                  : inCart
-                  ? "bg-green-500/15 border border-green-500/25 text-green-600 dark:text-green-400"
-                  : cn(
-                      "text-white bg-gradient-to-b from-coffee-400 to-coffee-600",
-                      "shadow-[inset_0_1px_0_0_rgba(255,255,255,0.28),0_8px_20px_-8px_rgba(190,112,64,0.7)]",
-                      "hover:from-coffee-300 hover:to-coffee-500"
-                    )
+                  ? "text-muted-foreground"
+                  : "text-coffee-700 dark:text-coffee-300"
               )}
             >
-              <ShoppingCart size={15} strokeWidth={1.75} />
-            </motion.button>
+              {isOutOfStock ? "ناموجود" : formatPrice(price)}
+            </p>
           </div>
+
+
         </div>
+
+
       </Link>
+      <motion.button
+        whileTap={{ scale: 0.88 }}
+        onClick={handleAddToCart}
+        disabled={isOutOfStock}
+        aria-label="افزودن به سبد"
+        className={cn(
+          "w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 absolute left-1 bottom-1 z-20",
+          isOutOfStock
+            ? "bg-muted/70 text-muted-foreground cursor-not-allowed"
+            : inCart
+              ? "bg-green-500/15 border border-green-500/25 text-green-600 dark:text-green-400"
+              : cn(
+                "text-white bg-gradient-to-b from-coffee-400 to-coffee-600",
+                "shadow-[inset_0_1px_0_0_rgba(255,255,255,0.28),0_8px_20px_-8px_rgba(190,112,64,0.7)]",
+                "hover:from-coffee-300 hover:to-coffee-500"
+              )
+        )}
+      >
+        <ShoppingCart size={15} strokeWidth={1.75} />
+      </motion.button>
     </motion.div>
   );
 }

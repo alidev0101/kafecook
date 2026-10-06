@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
-import { Tag, ArrowLeft, ArrowUpLeft, Clock, Coffee, Gift, Percent} from "lucide-react";
+import { Tag, ArrowLeft, ArrowUpLeft, Clock, Coffee, Gift, Percent } from "lucide-react";
 
 /* shared glass surface — same as the other sections */
 const glass =
@@ -48,11 +48,10 @@ export default function SpecialOffers() {
   const reduce = useReducedMotion();
 
   return (
-    <section className="relative overflow-hidden py-12 md:py-16 bg-muted/20 dark:bg-background">
-      {/* soft color behind the glass */}
-      <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div className="absolute top-0 right-[10%] h-[320px] w-[320px] rounded-full bg-coffee-400/20 dark:bg-coffee-600/[0.14] blur-[100px]" />
-        <div className="absolute bottom-0 left-[8%] h-[300px] w-[300px] rounded-full bg-amber-300/25 dark:bg-amber-700/[0.12] blur-[100px]" />
+    <section className="relative py-12 md:py-16 dark:bg-background overflow-x-hidden md:overflow-x-visible">
+      <div aria-hidden className="pointer-events-none absolute inset-0 z-10">
+        <div className="absolute top-0 right-[10%] h-[320px] w-[320px] rounded-full bg-coffee-400/20 blur-[100px] dark:bg-coffee-600/[0.14]" />
+        <div className="absolute bottom-0 left-[8%] h-[300px] w-[300px] rounded-full bg-amber-300/25 blur-[100px] dark:bg-amber-700/[0.12]" />
       </div>
 
       <div className="container-custom relative">
@@ -109,7 +108,7 @@ export default function SpecialOffers() {
                 <ArrowLeft size={14} strokeWidth={1.75} className="transition-transform duration-300 group-hover:-translate-x-1" />
               </Link>
             </div>
-          </motion.div> 
+          </motion.div>
 
           {/* ── Two small banners ── */}
           <div className="grid grid-rows-2 gap-5">
@@ -125,7 +124,7 @@ export default function SpecialOffers() {
                 <Link
                   href={href}
                   onMouseMove={trackPointer}
-                  className={`${glass} relative flex h-full items-center justify-between overflow-hidden rounded-3xl p-6
+                  className={`${glass} relative flex h-full items-center justify-between overflow-hidden rounded-3xl p-6 z-20
                     hover:-translate-y-1 hover:border-coffee-400/40 dark:hover:border-coffee-400/25 transition-all duration-300`}
                 >
                   {/* tint orb */}

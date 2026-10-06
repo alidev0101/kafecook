@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, Coffee, Droplets, Snowflake, Flame } from "lucide-react";
+import Image from "next/image";
 
 /* shared glass surface — same as the other sections */
 const glass =
@@ -50,11 +51,11 @@ export default function CoffeeTypes() {
   const reduce = useReducedMotion();
 
   return (
-    <section className="relative overflow-hidden py-16 md:py-24 bg-background">
+    <section className="relative py-16 md:py-24 !pb-0 bg-background overflow-x-hidden md:overflow-x-visible max-h-max">
       {/* soft color behind the glass */}
-      <div aria-hidden className="pointer-events-none absolute inset-0">
+      <div aria-hidden className="pointer-events-none absolute">
         <div className="absolute -top-16 left-[10%] h-[340px] w-[340px] rounded-full bg-coffee-400/20 dark:bg-coffee-600/[0.14] blur-[110px]" />
-        <div className="absolute -bottom-20 right-[8%] h-[320px] w-[320px] rounded-full bg-amber-300/20 dark:bg-amber-700/[0.12] blur-[110px]" />
+        <div className="absolute -bottom-20 right-[8%] h-[320px] w-[320px] rounded-full bg-amber-300/20 dark:bg-amber-700/[0.12] blur-[110px] z-10" />
       </div>
 
       <div className="container-custom relative">
@@ -71,20 +72,25 @@ export default function CoffeeTypes() {
           <p className="section-subtitle">هر روش، دنیایی متفاوت از طعم و تجربه</p>
         </div>
 
+        <div className="absolute -right-44 bottom-0 opacity-[0.055] blur-[2px] hidden lg:block">
+          <Image src={"/images/coffe-baner.png"} alt="" width={300} height={300} className="object-cover" />
+        </div>
+
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
           {types.map((t, i) => {
             const Icon = t.icon;
+
             return (
               <motion.div
                 key={t.name}
-                initial={reduce ? false : { opacity: 0, y: 20 }}
+                initial={reduce ? false : { opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.08, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                whileHover={reduce ? undefined : { y: -4 }}
+                transition={{ delay: i * 0.06, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={reduce ? undefined : { y: -3 }}
                 onMouseMove={trackPointer}
-                className={`${glass} group relative overflow-hidden rounded-3xl p-6 md:p-8
-                  hover:border-coffee-400/40 dark:hover:border-coffee-400/25 transition-all duration-300`}
+                className={`${glass} group relative z-20 overflow-hidden rounded-2xl p-4 md:p-5 hover:border-coffee-400/40 dark:hover:border-coffee-400/25 transition-all duration-300`}
               >
                 {/* spotlight */}
                 <span
@@ -92,27 +98,29 @@ export default function CoffeeTypes() {
                   className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                   style={{
                     background:
-                      "radial-gradient(200px circle at var(--x, 50%) var(--y, 50%), rgba(190,112,64,0.16), transparent 70%)",
+                      "radial-gradient(160px circle at var(--x, 50%) var(--y, 50%), rgba(190,112,64,0.13), transparent 70%)",
                   }}
                 />
 
-                <div
-                  className={`relative flex h-14 w-14 items-center justify-center rounded-2xl border backdrop-blur-md mb-5
-                    shadow-[inset_0_1px_0_0_rgba(255,255,255,0.45)] ${t.tile}
-                    transition-transform duration-300 group-hover:scale-110`}
-                >
-                  <Icon size={26} strokeWidth={1.5} />
-                </div>
+                <div className="relative flex items-center gap-3.5">
+                  <div
+                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border backdrop-blur-md shadow-[inset_0_1px_0_0_rgba(255,255,255,0.4)] ${t.tile} transition-transform duration-300 group-hover:scale-105`}
+                  >
+                    <Icon size={21} strokeWidth={1.7} />
+                  </div>
 
-                <h3
-                  className="relative text-xl font-bold mb-2 text-foreground/95"
-                  style={{ fontFamily: "Morabba, Vazirmatn, sans-serif" }}
-                >
-                  {t.name}
-                </h3>
-                <p className="relative text-sm leading-relaxed text-muted-foreground">
-                  {t.desc}
-                </p>
+                  <div className="min-w-0">
+                    <h3
+                      className="text-base font-bold leading-tight text-foreground/95"
+                    >
+                      {t.name}
+                    </h3>
+
+                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground line-clamp-2">
+                      {t.desc}
+                    </p>
+                  </div>
+                </div>
               </motion.div>
             );
           })}

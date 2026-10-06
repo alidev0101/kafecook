@@ -10,6 +10,7 @@ import { formatDate, formatNumber } from "@/lib/utils";
 import Skeleton from "@/components/ui/Skeleton";
 import SectionHeader from "@/components/shared/SectionHeader";
 import { DEFAULT_IMG } from "@/lib/constants";
+import UniversalSlider from "../shared/UniversalSlider";
 
 function PostMiniCard({ post, index, reduce }) {
   return (
@@ -102,53 +103,39 @@ export default function LatestPosts() {
   if (!isLoading && (!data || data.length === 0)) return null;
 
   return (
-    <section className="relative overflow-hidden py-16 md:py-20 bg-muted/20 dark:bg-background">
-      {/* soft color behind the glass */}
+    <section className="relative py-16 md:py-20 dark:bg-background">
       <div aria-hidden className="pointer-events-none absolute inset-0">
         <div className="absolute -top-10 right-[6%] h-[320px] w-[320px] rounded-full bg-coffee-400/20 dark:bg-coffee-600/[0.14] blur-[110px]" />
-        <div className="absolute bottom-0 left-[8%] h-[300px] w-[300px] rounded-full bg-amber-300/20 dark:bg-amber-700/[0.12] blur-[110px]" />
+        <div className="absolute bottom-20 left-0 h-[300px] w-[300px] rounded-full bg-amber-300/20 dark:bg-amber-700/[0.12] blur-[110px]" />
       </div>
 
       <div className="container-custom relative">
-        <motion.div
-          initial={reduce ? false : { opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          <SectionHeader
-            title="آخرین مقالات وبلاگ"
-            subtitle="آموزش، داستان و راهنمای قهوه از تیم کافه کوک"
-            href="/blog"
-            hrefLabel="همه مقالات"
-          />
+        <motion.div initial={reduce ? undefined : { opacity: 0, y: 15 }} whileInView={reduce ? undefined : { opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.5 }}>
+          <SectionHeader title="آخرین مقالات وبلاگ" subtitle="آموزش، داستان و راهنمای قهوه از تیم کافه کوک" href="/blog" hrefLabel="همه مقالات" />
         </motion.div>
 
         {isLoading ? (
           <LatestPostsSkeleton />
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {data.map((post, i) => (
-              <PostMiniCard key={post._id} post={post} index={i} reduce={reduce} />
-            ))}
-          </div>
+          <UniversalSlider
+            items={data}
+            slidesPerView={1.15}
+            spaceBetween={16}
+            breakpoints={{
+              640: { slidesPerView: 2, spaceBetween: 18 },
+              1024: { slidesPerView: 3, spaceBetween: 20 },
+            }}
+            renderItem={(post, index) => (
+              <PostMiniCard post={post} index={index} reduce={reduce} />
+            )}
+          />
         )}
 
-        {/* CTA */}
-        <motion.div
-          initial={reduce ? false : { opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3 }}
-          className="text-center mt-10"
-        >
-          <Link
-            href="/blog"
-            className="group inline-flex items-center gap-2 px-7 py-3.5 bg-gradient-to-b from-coffee-400 to-coffee-600 hover:from-coffee-300 hover:to-coffee-500 text-white font-medium rounded-2xl transition-all shadow-[inset_0_1px_0_0_rgba(255,255,255,0.28),0_10px_28px_-10px_rgba(190,112,64,0.65)] hover:-translate-y-0.5"
-          >
+        <motion.div initial={reduce ? undefined : { opacity: 0, y: 10 }} whileInView={reduce ? undefined : { opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="text-center mt-10">
+          <Link href="/blog" className="group inline-flex items-center gap-2 rounded-full border border-coffee-200 bg-white/80 px-5 py-2.5 text-sm font-semibold text-coffee-700 shadow-sm transition-all hover:border-coffee-300 hover:bg-coffee-50 dark:border-coffee-800 dark:bg-card dark:text-coffee-300 dark:hover:bg-coffee-950/40">
             <BookOpen size={16} />
             مشاهده همه مقالات
-            <ArrowLeft size={15} className="transition-transform duration-300 group-hover:-translate-x-1" />
+            <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-1" />
           </Link>
         </motion.div>
       </div>
