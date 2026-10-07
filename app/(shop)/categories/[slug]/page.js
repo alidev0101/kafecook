@@ -28,13 +28,14 @@ export default function CategoryPage() {
   return (
     <div className="container-custom py-8">
       <Breadcrumb
+      className={"mt-14"}
         items={[
           { label: "دسته‌بندی‌ها", href: "/categories" },
           { label: catLoading ? "..." : category?.name || slug },
         ]}
       />
 
-      <div className="glass rounded-3xl px-6 py-6 mb-8">
+      {/* <div className="glass rounded-3xl px-6 py-6 mb-8">
         {catLoading ? (
           <Skeleton className="h-8 w-48" />
         ) : (
@@ -52,7 +53,7 @@ export default function CategoryPage() {
             )}
           </>
         )}
-      </div>
+      </div> */}
 
       <ProductGrid products={data?.data} loading={isLoading} />
     </div>

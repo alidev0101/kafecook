@@ -71,23 +71,13 @@ function ProductsContent() {
     <div className="container-custom py-6 pt-20">
       
 
-      <div className="glass rounded-2xl px-5 sm:px-7 py-5 mb-3 mt-2 flex items-center justify-between gap-4">
-        {/* <div>
-          <h1 className="font-morabba text-2xl font-black text-foreground">
-            همه محصولات
-          </h1>
-          {data?.pagination && (
-            <p className="text-sm text-muted-foreground mt-1">
-              {formatNumber(data.pagination.total)} محصول برای شما پیدا شد
-            </p>
-          )}
-        </div> */}
+      <div className="flex items-center justify-between gap-3">
 
         <Breadcrumb items={[{ label: "محصولات" }]} />
 
         <Button
           variant="secondary"
-          size="sm"
+          size="md"
           className="lg:hidden flex items-center gap-2 !bg-white/60 dark:!bg-white/[0.06] backdrop-blur-xl border-white/80 dark:border-white/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.6)] dark:shadow-none"
           onClick={() => setFilterOpen(true)}
         >

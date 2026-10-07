@@ -42,20 +42,25 @@ export default function OrdersPage() {
       <div className="flex flex-col lg:flex-row gap-6 mt-2">
         <UserSidebar />
         <main className="flex-1">
-          <div className="bg-white rounded-2xl shadow-card overflow-hidden">
-            <div className="p-5 border-b border-gray-100">
-              <h2 className="text-lg font-bold text-gray-800 mb-4">سفارش‌هایم</h2>
+          <div className="glass overflow-hidden rounded-2xl shadow-card">
+            <div className="border-b border-border/60 p-5">
+              <h2 className="mb-4 text-lg font-bold text-foreground">
+                سفارش‌هایم
+              </h2>
+
               {/* Status tabs */}
-              <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+              <div className="scrollbar-hide flex gap-2 overflow-x-auto">
                 {STATUS_TABS.map((tab) => (
                   <button
                     key={tab.value}
-                    onClick={() => { setStatus(tab.value); setPage(1); }}
-                    className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${
-                      status === tab.value
-                        ? "bg-coffee-600 text-white"
-                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                    }`}
+                    onClick={() => {
+                      setStatus(tab.value);
+                      setPage(1);
+                    }}
+                    className={`whitespace-nowrap rounded-xl px-4 py-2 text-sm font-medium transition-all ${status === tab.value
+                        ? "bg-coffee-600 text-white shadow-sm shadow-coffee-900/10 dark:bg-coffee-500 dark:shadow-coffee-950/20"
+                        : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+                      }`}
                   >
                     {tab.label}
                   </button>
@@ -64,7 +69,7 @@ export default function OrdersPage() {
             </div>
 
             {isLoading ? (
-              <div className="p-5 space-y-4">
+              <div className="space-y-4 p-5">
                 {[1, 2, 3].map((i) => (
                   <Skeleton key={i} className="h-24 rounded-xl" />
                 ))}
@@ -77,31 +82,41 @@ export default function OrdersPage() {
                 action={{ label: "شروع خرید", href: "/products" }}
               />
             ) : (
-              <div className="divide-y divide-gray-50">
+              <div className="divide-y divide-border/50">
                 {data.data.map((order) => (
-                  <div key={order._id} className="p-5 hover:bg-gray-50 transition-colors">
+                  <div
+                    key={order._id}
+                    className="p-5 transition-colors hover:bg-muted/40 dark:hover:bg-white/[0.025]"
+                  >
                     <div className="flex items-start justify-between gap-4">
                       <div className="space-y-1.5">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-bold text-gray-900 text-sm font-mono" dir="ltr">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span
+                            className="font-mono text-sm font-bold text-foreground"
+                            dir="ltr"
+                          >
                             #{order.orderNumber}
                           </span>
+
                           <OrderStatusBadge status={order.status} />
                           <PaymentStatusBadge status={order.paymentStatus} />
                         </div>
-                        <p className="text-xs text-gray-400">
+
+                        <p className="text-xs text-muted-foreground">
                           {formatDate(order.createdAt)}
                         </p>
-                        <p className="text-sm text-gray-600">
+
+                        <p className="text-sm text-muted-foreground">
                           {formatNumber(order.items?.length || 0)} قلم کالا •{" "}
-                          <span className="font-semibold text-coffee-700">
+                          <span className="font-semibold text-coffee-700 dark:text-coffee-400">
                             {formatPrice(order.total)}
                           </span>
                         </p>
                       </div>
+
                       <Link
                         href={`/orders/${order._id}`}
-                        className="flex items-center gap-1.5 text-sm text-coffee-600 hover:text-coffee-800 font-medium whitespace-nowrap border border-coffee-200 hover:border-coffee-400 px-3 py-2 rounded-xl transition-all"
+                        className="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl border border-coffee-200 bg-coffee-50/50 px-3 py-2 text-sm font-medium text-coffee-700 transition-all hover:border-coffee-400 hover:bg-coffee-100 dark:border-coffee-800/60 dark:bg-coffee-950/30 dark:text-coffee-300 dark:hover:border-coffee-600 dark:hover:bg-coffee-900/40"
                       >
                         <Eye size={15} />
                         جزئیات
@@ -122,6 +137,7 @@ export default function OrdersPage() {
               </div>
             )}
           </div>
+
         </main>
       </div>
     </div>

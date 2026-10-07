@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
-import { Package, MapPin, Truck, CreditCard, ArrowRight, Clock } from "lucide-react";
+import { Package, MapPin, Coffee  , CreditCard, ArrowRight, Clock } from "lucide-react";
 import UserSidebar from "@/components/shared/UserSidebar";
 import { OrderStatusBadge, PaymentStatusBadge } from "@/components/shared/OrderStatusBadge";
 import Skeleton from "@/components/ui/Skeleton";
@@ -47,22 +47,38 @@ export default function OrderDetailPage() {
         <UserSidebar />
         <main className="flex-1 space-y-5">
           {/* Header */}
-          <div className="bg-white rounded-2xl shadow-card p-5">
-            <div className="flex items-start justify-between flex-wrap gap-3">
+          <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-card">
+            <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <h1 className="text-xl font-black text-gray-900 font-mono" dir="ltr">
+                <div className="mb-1 flex flex-wrap items-center gap-2">
+                  <h1
+                    className="font-mono text-xl font-black text-foreground"
+                    dir="ltr"
+                  >
                     #{order.orderNumber}
                   </h1>
+
                   <OrderStatusBadge status={order.status} />
                   <PaymentStatusBadge status={order.paymentStatus} />
                 </div>
-                <p className="text-sm text-gray-400">{formatDateTime(order.createdAt)}</p>
+
+                <p className="text-sm text-muted-foreground">
+                  {formatDateTime(order.createdAt)}
+                </p>
               </div>
+
               {order.trackingCode && (
-                <div className="bg-blue-50 border border-blue-200 rounded-xl px-4 py-2.5 text-sm">
-                  <span className="text-gray-500 text-xs">کد رهگیری: </span>
-                  <span className="font-bold text-blue-700" dir="ltr">{order.trackingCode}</span>
+                <div className="rounded-xl border border-blue-200 bg-blue-50/70 px-4 py-2.5 text-sm dark:border-blue-900/50 dark:bg-blue-950/20">
+                  <span className="text-xs text-muted-foreground">
+                    کد رهگیری:{" "}
+                  </span>
+
+                  <span
+                    className="font-bold text-blue-700 dark:text-blue-300"
+                    dir="ltr"
+                  >
+                    {order.trackingCode}
+                  </span>
                 </div>
               )}
             </div>
@@ -72,19 +88,34 @@ export default function OrderDetailPage() {
               <div className="mt-6">
                 <div className="flex items-center">
                   {["ثبت شد", "پردازش", "ارسال", "تحویل"].map((label, i) => (
-                    <div key={i} className="flex-1 flex items-center">
-                      <div className="flex flex-col items-center gap-1 flex-shrink-0">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
-                          i <= currentStep ? "bg-coffee-600 text-white" : "bg-gray-200 text-gray-400"
-                        }`}>
+                    <div key={i} className="flex flex-1 items-center">
+                      <div className="flex shrink-0 flex-col items-center gap-1">
+                        <div
+                          className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-all ${i <= currentStep
+                              ? "bg-coffee-600 text-white shadow-sm shadow-coffee-900/15 dark:bg-coffee-500"
+                              : "border border-border bg-muted text-muted-foreground"
+                            }`}
+                        >
                           {i < currentStep ? "✓" : i + 1}
                         </div>
-                        <span className={`text-xs whitespace-nowrap ${i <= currentStep ? "text-coffee-600 font-medium" : "text-gray-400"}`}>
+
+                        <span
+                          className={`whitespace-nowrap text-xs ${i <= currentStep
+                              ? "font-medium text-coffee-600 dark:text-coffee-400"
+                              : "text-muted-foreground"
+                            }`}
+                        >
                           {label}
                         </span>
                       </div>
+
                       {i < 3 && (
-                        <div className={`flex-1 h-0.5 mx-1 transition-all ${i < currentStep ? "bg-coffee-500" : "bg-gray-200"}`} />
+                        <div
+                          className={`mx-1 h-0.5 flex-1 transition-all ${i < currentStep
+                              ? "bg-coffee-500 dark:bg-coffee-400"
+                              : "bg-border"
+                            }`}
+                        />
                       )}
                     </div>
                   ))}
@@ -94,30 +125,51 @@ export default function OrderDetailPage() {
           </div>
 
           {/* Items */}
-          <div className="bg-white rounded-2xl shadow-card p-5">
-            <h2 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
-              <Package size={18} className="text-coffee-500" /> محصولات سفارش
+          <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-card">
+            <h2 className="mb-4 flex items-center gap-2 font-bold text-foreground">
+              <Package size={18} className="text-coffee-500 dark:text-coffee-400" />
+              محصولات سفارش
             </h2>
+
             <div className="space-y-3">
               {order.items?.map((item) => (
-                <div key={item._id} className="flex items-center gap-3 py-3 border-b border-gray-50 last:border-0">
-                  <div className="w-14 h-14 rounded-xl bg-cream-50 flex-shrink-0 overflow-hidden relative">
+                <div
+                  key={item._id}
+                  className="flex items-center gap-3 border-b border-border/50 py-3 last:border-0"
+                >
+                  <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-border/50 bg-muted">
                     {item.productSnapshot?.image ? (
-                      <Image src={item.productSnapshot.image} alt={item.productSnapshot.name} fill className="object-cover" />
+                      <Image
+                        src={item.productSnapshot.image}
+                        alt={item.productSnapshot.name}
+                        fill
+                        className="object-cover"
+                      />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-xl opacity-20">☕</div>
+                      <div className="flex h-full w-full items-center justify-center text-coffee-500/40 dark:text-coffee-400/30">
+                        <Coffee size={22} />
+                      </div>
                     )}
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-gray-800 truncate">{item.productSnapshot?.name}</p>
+
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold text-foreground">
+                      {item.productSnapshot?.name}
+                    </p>
+
                     {item.productSnapshot?.weightLabel && (
-                      <p className="text-xs text-gray-400">{item.productSnapshot.weightLabel}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {item.productSnapshot.weightLabel}
+                      </p>
                     )}
-                    <p className="text-xs text-gray-500 mt-0.5">
-                      {formatNumber(item.quantity)} عدد × {formatPrice(item.price)}
+
+                    <p className="mt-0.5 text-xs text-muted-foreground">
+                      {formatNumber(item.quantity)} عدد ×{" "}
+                      {formatPrice(item.price)}
                     </p>
                   </div>
-                  <p className="font-bold text-coffee-700 text-sm whitespace-nowrap">
+
+                  <p className="whitespace-nowrap text-sm font-bold text-coffee-700 dark:text-coffee-400">
                     {formatPrice(item.price * item.quantity)}
                   </p>
                 </div>
@@ -125,44 +177,87 @@ export default function OrderDetailPage() {
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-5">
+          {/* Address + Payment */}
+          <div className="grid gap-5 sm:grid-cols-2">
             {/* Address */}
-            <div className="bg-white rounded-2xl shadow-card p-5">
-              <h2 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <MapPin size={18} className="text-coffee-500" /> آدرس تحویل
+            <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-card">
+              <h2 className="mb-4 flex items-center gap-2 font-bold text-foreground">
+                <MapPin size={18} className="text-coffee-500 dark:text-coffee-400" />
+                آدرس تحویل
               </h2>
-              <div className="text-sm text-gray-600 space-y-1.5">
-                <p className="font-semibold text-gray-800">{order.shippingAddress?.recipientName}</p>
-                <p dir="ltr" className="text-right">{order.shippingAddress?.phone}</p>
-                <p>{order.shippingAddress?.province}، {order.shippingAddress?.city}، {order.shippingAddress?.street}</p>
-                {order.shippingAddress?.buildingNumber && <p>پلاک {order.shippingAddress.buildingNumber}{order.shippingAddress.unit ? `، واحد ${order.shippingAddress.unit}` : ""}</p>}
-                <p className="text-xs text-gray-400">کد پستی: <span dir="ltr">{order.shippingAddress?.postalCode}</span></p>
+
+              <div className="space-y-1.5 text-sm text-muted-foreground">
+                <p className="font-semibold text-foreground">
+                  {order.shippingAddress?.recipientName}
+                </p>
+
+                <p dir="ltr" className="text-right">
+                  {order.shippingAddress?.phone}
+                </p>
+
+                <p>
+                  {order.shippingAddress?.province}،{" "}
+                  {order.shippingAddress?.city}،{" "}
+                  {order.shippingAddress?.street}
+                </p>
+
+                {order.shippingAddress?.buildingNumber && (
+                  <p>
+                    پلاک {order.shippingAddress.buildingNumber}
+                    {order.shippingAddress.unit
+                      ? `، واحد ${order.shippingAddress.unit}`
+                      : ""}
+                  </p>
+                )}
+
+                <p className="pt-1 text-xs text-muted-foreground">
+                  کد پستی:{" "}
+                  <span dir="ltr">{order.shippingAddress?.postalCode}</span>
+                </p>
               </div>
             </div>
 
             {/* Payment summary */}
-            <div className="bg-white rounded-2xl shadow-card p-5">
-              <h2 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <CreditCard size={18} className="text-coffee-500" /> خلاصه پرداخت
+            <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-card">
+              <h2 className="mb-4 flex items-center gap-2 font-bold text-foreground">
+                <CreditCard
+                  size={18}
+                  className="text-coffee-500 dark:text-coffee-400"
+                />
+                خلاصه پرداخت
               </h2>
+
               <div className="space-y-2.5 text-sm">
-                <div className="flex justify-between text-gray-600">
+                <div className="flex justify-between text-muted-foreground">
                   <span>جمع محصولات</span>
                   <span>{formatPrice(order.subtotal)}</span>
                 </div>
-                <div className="flex justify-between text-gray-600">
+
+                <div className="flex justify-between text-muted-foreground">
                   <span>هزینه ارسال ({order.shippingMethodLabel})</span>
-                  <span>{order.shippingCost === 0 ? "رایگان" : formatPrice(order.shippingCost)}</span>
+                  <span>
+                    {order.shippingCost === 0
+                      ? "رایگان"
+                      : formatPrice(order.shippingCost)}
+                  </span>
                 </div>
+
                 {order.discountAmount > 0 && (
-                  <div className="flex justify-between text-green-600">
-                    <span>تخفیف {order.couponCode && `(${order.couponCode})`}</span>
+                  <div className="flex justify-between text-green-600 dark:text-green-400">
+                    <span>
+                      تخفیف {order.couponCode && `(${order.couponCode})`}
+                    </span>
+
                     <span>-{formatPrice(order.discountAmount)}</span>
                   </div>
                 )}
-                <div className="flex justify-between font-bold text-gray-900 pt-2 border-t border-gray-100 text-base">
+
+                <div className="flex justify-between border-t border-border pt-3 text-base font-bold text-foreground">
                   <span>مجموع</span>
-                  <span className="text-coffee-700">{formatPrice(order.total)}</span>
+
+                  <span className="text-coffee-700 dark:text-coffee-400">
+                    {formatPrice(order.total)}
+                  </span>
                 </div>
               </div>
             </div>
@@ -170,18 +265,35 @@ export default function OrderDetailPage() {
 
           {/* History */}
           {order.statusHistory?.length > 0 && (
-            <div className="bg-white rounded-2xl shadow-card p-5">
-              <h2 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <Clock size={18} className="text-coffee-500" /> تاریخچه وضعیت
+            <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-card">
+              <h2 className="mb-4 flex items-center gap-2 font-bold text-foreground">
+                <Clock
+                  size={18}
+                  className="text-coffee-500 dark:text-coffee-400"
+                />
+                تاریخچه وضعیت
               </h2>
+
               <div className="space-y-3">
                 {order.statusHistory.map((h, i) => (
-                  <div key={i} className="flex items-start gap-3 text-sm">
-                    <div className="w-2 h-2 rounded-full bg-coffee-400 mt-2 flex-shrink-0" />
+                  <div
+                    key={i}
+                    className="flex items-start gap-3 text-sm"
+                  >
+                    <div className="mt-2 h-2 w-2 shrink-0 rounded-full bg-coffee-400 dark:bg-coffee-500" />
+
                     <div>
                       <OrderStatusBadge status={h.status} />
-                      {h.note && <p className="text-gray-500 mt-1 text-xs">{h.note}</p>}
-                      <p className="text-gray-400 text-xs mt-1">{formatDateTime(h.changedAt)}</p>
+
+                      {h.note && (
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          {h.note}
+                        </p>
+                      )}
+
+                      <p className="mt-1 text-xs text-muted-foreground/70">
+                        {formatDateTime(h.changedAt)}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -189,12 +301,18 @@ export default function OrderDetailPage() {
             </div>
           )}
 
+          {/* Back */}
           <div className="flex justify-end">
-            <Link href="/orders" className="flex items-center gap-2 text-sm text-coffee-600 hover:underline">
-              <ArrowRight size={15} /> بازگشت به لیست سفارش‌ها
+            <Link
+              href="/orders"
+              className="flex items-center gap-2 text-sm font-medium text-coffee-600 transition-colors hover:text-coffee-800 dark:text-coffee-400 dark:hover:text-coffee-300"
+            >
+              <ArrowRight size={15} />
+              بازگشت به لیست سفارش‌ها
             </Link>
           </div>
         </main>
+
       </div>
     </div>
   );

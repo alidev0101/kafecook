@@ -32,10 +32,10 @@ export default function WishlistPage() {
       <div className="flex flex-col lg:flex-row gap-6 mt-2">
         <UserSidebar />
         <main className="flex-1">
-          <div className="bg-white rounded-2xl shadow-card p-5">
+          <div className="glass rounded-2xl shadow-card p-5">
             <div className="flex items-center gap-2 mb-6">
               <Heart size={20} className="text-coffee-500" />
-              <h2 className="text-lg font-bold text-gray-800">
+              <h2 className="text-lg font-bold">
                 علاقه‌مندی‌ها
                 {data?.count > 0 && (
                   <span className="text-sm font-normal text-gray-400 mr-2">
@@ -53,7 +53,7 @@ export default function WishlistPage() {
                 action={{ label: "مشاهده محصولات", href: "/products" }}
               />
             ) : (
-              <ProductGrid products={products} loading={isLoading} />
+              <ProductGrid products={products} loading={isLoading} enableSlider={false}/>
             )}
           </div>
         </main>

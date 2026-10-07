@@ -22,61 +22,67 @@ export default function BrandsClient({ brands }) {
 
   const filtered = search.trim()
     ? brands.filter(
-        (brand) =>
-          brand.name.toLowerCase().includes(search.toLowerCase()) ||
-          brand.description?.toLowerCase().includes(search.toLowerCase()) ||
-          brand.origin?.toLowerCase().includes(search.toLowerCase())
-      )
+      (brand) =>
+        brand.name.toLowerCase().includes(search.toLowerCase()) ||
+        brand.description?.toLowerCase().includes(search.toLowerCase()) ||
+        brand.origin?.toLowerCase().includes(search.toLowerCase())
+    )
     : brands;
 
   return (
     <div>
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-8">
-        <div className="relative flex-1 max-w-xs">
+      <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        {/* Search */}
+        <div className="relative w-full sm:w-80">
           <Search
             size={16}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
+            className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
           />
 
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="جستجو در برندها..."
-            className="input-custom pr-9 h-10"
+            className="input-custom h-10 w-full pr-9"
           />
         </div>
 
-        <div className="flex items-center gap-1 bg-muted rounded-xl p-1 self-start sm:self-auto">
-          <button
-            type="button"
-            onClick={() => setView("grid")}
-            className={cn(
-              "p-2 rounded-lg transition-all",
-              view === "grid"
-                ? "bg-card shadow-sm text-coffee-600"
-                : "text-muted-foreground hover:text-foreground"
-            )}
-          >
-            <Grid3x3 size={16} />
-          </button>
+        {/* View + Count */}
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 items-center gap-1 rounded-xl border border-border/60 bg-muted/60 p-1">
+            <button
+              type="button"
+              onClick={() => setView("grid")}
+              aria-label="نمایش شبکه‌ای"
+              className={cn(
+                "flex h-8 w-8 items-center justify-center rounded-lg transition-all duration-200",
+                view === "grid"
+                  ? "bg-card text-coffee-600 shadow-sm dark:text-coffee-300"
+                  : "text-muted-foreground hover:bg-card/60 hover:text-foreground"
+              )}
+            >
+              <Grid3x3 size={16} strokeWidth={1.8} />
+            </button>
 
-          <button
-            type="button"
-            onClick={() => setView("list")}
-            className={cn(
-              "p-2 rounded-lg transition-all",
-              view === "list"
-                ? "bg-card shadow-sm text-coffee-600"
-                : "text-muted-foreground hover:text-foreground"
-            )}
-          >
-            <List size={16} />
-          </button>
+            <button
+              type="button"
+              onClick={() => setView("list")}
+              aria-label="نمایش لیستی"
+              className={cn(
+                "flex h-8 w-8 items-center justify-center rounded-lg transition-all duration-200",
+                view === "list"
+                  ? "bg-card text-coffee-600 shadow-sm dark:text-coffee-300"
+                  : "text-muted-foreground hover:bg-card/60 hover:text-foreground"
+              )}
+            >
+              <List size={16} strokeWidth={1.8} />
+            </button>
+          </div>
+
+          <span className="whitespace-nowrap text-sm text-muted-foreground">
+            {filtered.length} برند
+          </span>
         </div>
-
-        <p className="text-sm text-muted-foreground self-center">
-          {filtered.length} برند
-        </p>
       </div>
 
       <AnimatePresence mode="wait">
@@ -137,9 +143,20 @@ function GridCard({ brand, i }) {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <span className="font-morabba text-4xl font-black text-coffee-400 group-hover:scale-110 transition-transform duration-300">
-                {brand.name?.charAt(0)}
-              </span>
+              {/* Logo */}
+              <Link
+                href="/"
+                className="mb-8 flex items-center justify-center gap-2"
+              >
+                <div className="flex h-16 w-16 items-center justify-center rounded-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.3),0_8px_18px_-8px_rgba(190,112,64,0.7)] transition-shadow">
+                  <Image
+                    src="/icons/icon-72x72.png"
+                    alt="کافه کوک"
+                    width={45}
+                    height={45}
+                  />
+                </div>
+              </Link>
             </div>
           )}
 
@@ -153,7 +170,7 @@ function GridCard({ brand, i }) {
         </div>
 
         <div className="p-4">
-          <h3 className="font-morabba font-bold text-foreground text-sm group-hover:text-coffee-700 dark:group-hover:text-coffee-200 transition-colors">
+          <h3 className="font-bold text-foreground text-lg group-hover:text-coffee-700 dark:group-hover:text-coffee-200 transition-colors">
             {brand.name}
           </h3>
 
@@ -164,7 +181,7 @@ function GridCard({ brand, i }) {
           )}
 
           {brand.description && (
-            <p className="text-xs text-muted-foreground mt-1.5 line-clamp-2">
+            <p className="text-xs text-muted-foreground mt-2 line-clamp-2 h-10">
               {brand.description}
             </p>
           )}
@@ -175,7 +192,7 @@ function GridCard({ brand, i }) {
             </span>
 
             <span className="flex items-center gap-1">
-              مشاهده محصولات
+           <span className="hidden md:block">   مشاهده محصولات</span>
               <ChevronLeft size={12} />
             </span>
           </div>

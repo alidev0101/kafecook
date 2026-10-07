@@ -175,10 +175,6 @@ export default function HeroSection() {
             </motion.div>
           </motion.div>
 
-          {/* ═══════════════════════════════════════════
-              Image Column
-          ═══════════════════════════════════════════ */}
-
           <motion.div
             initial={{ opacity: 0, scale: 0.94 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -192,16 +188,13 @@ export default function HeroSection() {
             <div className="relative w-full max-w-[420px] aspect-square">
 
               {/* Ambient glow */}
-
               <div className="absolute inset-0 rounded-full bg-coffee-500/[0.12] dark:bg-coffee-500/[0.16] blur-3xl scale-110" />
 
               {/* Outer orbit */}
-
               <div
                 aria-hidden
                 className="absolute -inset-5 rounded-full border border-coffee-900/[0.08] dark:border-white/[0.05]"
               />
-
               {/* Inner orbit */}
 
               <div

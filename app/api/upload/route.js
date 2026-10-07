@@ -1,11 +1,5 @@
 export const dynamic = 'force-dynamic';
-/**
- * POST /api/upload  — آپلود تصویر محصول
- * DELETE /api/upload — حذف تصویر
- *
- * فایل را در /public/uploads/products/ ذخیره می‌کند.
- * از sharp برای بهینه‌سازی و تغییر اندازه استفاده می‌شود.
- */
+
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
@@ -19,14 +13,12 @@ const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads", "products");
 const MAX_SIZE = 5 * 1024 * 1024; // 5MB
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/jpg"];
 
-// اطمینان از وجود پوشه
 async function ensureDir(dir) {
   if (!existsSync(dir)) {
     await mkdir(dir, { recursive: true });
   }
 }
 
-// POST: آپلود تصویر
 export async function POST(req) {
   try {
     // Auth check

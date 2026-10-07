@@ -14,7 +14,7 @@ export default function Skeleton({ className, ...props }) {
 
 export function ProductCardSkeleton() {
   return (
-    <div className="bg-card rounded-2xl border border-border shadow-card inverted-radius">
+    <div className="bg-card rounded-2xl shadow-card inverted-radius">
       <Skeleton className="aspect-square w-full rounded-none" />
       <div className="p-3.5 space-y-2.5">
         <Skeleton className="h-3 w-1/3" />

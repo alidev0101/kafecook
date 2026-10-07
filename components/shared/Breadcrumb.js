@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 export default function Breadcrumb({ items = [], className }) {
   return (
-    <nav aria-label="breadcrumb" className={cn("flex items-center gap-1 text-sm text-muted-foreground flex-wrap", className)}>
+    <nav aria-label="breadcrumb" className={cn("flex items-center gap-1 text-sm text-muted-foreground flex-wrap glass rounded-lg px-5 sm:px-7 py-2.5 mb-2.5 mt-2 w-full", className)}>
       <Link href="/" className="flex items-center hover:text-coffee-600 dark:hover:text-coffee-400 transition-colors">
         <Home size={14} />
       </Link>

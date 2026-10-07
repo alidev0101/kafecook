@@ -14,7 +14,7 @@ import Breadcrumb from "@/components/shared/Breadcrumb";
 
 export default function ProfilePage() {
   const { data: session, update } = useSession();
-  const [showPassForm, setShowPassForm] = useState(false);
+  const [showPassForm, setShowPassForm] = useState(true);
   const [showCurrentPass, setShowCurrentPass] = useState(false);
   const [showNewPass, setShowNewPass] = useState(false);
 
@@ -53,12 +53,12 @@ export default function ProfilePage() {
         <UserSidebar />
         <main className="flex-1 space-y-5">
           {/* Profile info */}
-          <div className="bg-white rounded-2xl shadow-card p-6">
+          <div className="glass rounded-2xl shadow-card p-6">
             <div className="flex items-center gap-2 mb-6">
               <div className="w-8 h-8 rounded-xl bg-coffee-100 flex items-center justify-center">
                 <User size={16} className="text-coffee-600" />
               </div>
-              <h2 className="text-lg font-bold text-gray-800">اطلاعات شخصی</h2>
+              <h2 className="text-lg font-bold">اطلاعات شخصی</h2>
             </div>
             <form
               onSubmit={profileForm.handleSubmit((data) => profileMutation.mutate(data))}
@@ -72,14 +72,13 @@ export default function ProfilePage() {
                   error={profileForm.formState.errors.name?.message}
                 />
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">ایمیل</label>
-                  <input
+                  <label className="block text-sm font-medium mb-1.5">ایمیل</label>
+                  <Input
                     type="email"
                     value={session?.user?.email || ""}
                     readOnly
-                    className="w-full h-11 px-4 rounded-xl border border-gray-200 bg-gray-50 text-gray-400 text-sm cursor-not-allowed"
                   />
-                  <p className="text-xs text-gray-400 mt-1">ایمیل قابل تغییر نیست</p>
+                  <p className="text-xs text-red-600 mt-1">ایمیل قابل تغییر نیست</p>
                 </div>
               </div>
               <Input
@@ -97,18 +96,17 @@ export default function ProfilePage() {
           </div>
 
           {/* Change password */}
-          <div className="bg-white rounded-2xl shadow-card p-6">
+          <div className="glass rounded-2xl shadow-card p-6">
             <button
-              onClick={() => setShowPassForm(!showPassForm)}
               className="flex items-center justify-between w-full"
             >
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-xl bg-coffee-100 flex items-center justify-center">
                   <Lock size={16} className="text-coffee-600" />
                 </div>
-                <h2 className="text-lg font-bold text-gray-800">تغییر رمز عبور</h2>
+                <h2 className="text-lg font-bold">تغییر رمز عبور</h2>
               </div>
-              <span className="text-sm text-coffee-600">{showPassForm ? "بستن" : "تغییر"}</span>
+              {/* <span className="text-sm text-coffee-600">{showPassForm ? "بستن" : "تغییر"}</span> */}
             </button>
 
             {showPassForm && (
@@ -117,27 +115,25 @@ export default function ProfilePage() {
                 className="mt-5 space-y-4"
               >
                 <div className="relative">
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">رمز عبور فعلی *</label>
+                  <label className="block text-sm font-medium mb-1.5">رمز عبور فعلی *</label>
                   <div className="relative">
-                    <input
+                    <Input
                       type={showCurrentPass ? "text" : "password"}
-                      className="w-full h-11 px-4 pl-10 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-coffee-500"
                       {...passwordForm.register("currentPassword", { required: true })}
                     />
-                    <button type="button" onClick={() => setShowCurrentPass(!showCurrentPass)} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                    <button type="button" onClick={() => setShowCurrentPass(!showCurrentPass)} className="absolute left-3 top-1/2 -translate-y-1/2 ">
                       {showCurrentPass ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">رمز عبور جدید *</label>
+                  <label className="block text-sm font-medium mb-1.5">رمز عبور جدید *</label>
                   <div className="relative">
-                    <input
+                    <Input
                       type={showNewPass ? "text" : "password"}
-                      className="w-full h-11 px-4 pl-10 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-coffee-500"
                       {...passwordForm.register("newPassword", { required: true, minLength: 6 })}
                     />
-                    <button type="button" onClick={() => setShowNewPass(!showNewPass)} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                    <button type="button" onClick={() => setShowNewPass(!showNewPass)} className="absolute left-3 top-1/2 -translate-y-1/2 ">
                       {showNewPass ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
                   </div>
@@ -148,9 +144,9 @@ export default function ProfilePage() {
                   {...passwordForm.register("confirmNewPassword", { required: true })}
                 />
                 <div className="flex justify-end gap-3">
-                  <Button variant="secondary" type="button" onClick={() => { setShowPassForm(false); passwordForm.reset(); }}>
+                  {/* <Button variant="secondary" type="button" onClick={() => { setShowPassForm(false); passwordForm.reset(); }}>
                     انصراف
-                  </Button>
+                  </Button> */}
                   <Button type="submit" loading={passwordMutation.isPending}>
                     تغییر رمز
                   </Button>

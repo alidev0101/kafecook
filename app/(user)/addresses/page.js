@@ -14,7 +14,7 @@ import EmptyState from "@/components/ui/EmptyState";
 import Skeleton from "@/components/ui/Skeleton";
 import Breadcrumb from "@/components/shared/Breadcrumb";
 
-const PROVINCES = ["کرمان","تهران","اصفهان","مشهد","شیراز","تبریز","اهواز","کرج","قم","رشت","ارومیه","زاهدان","همدان","سنندج","بندرعباس","اردبیل","بیرجند","بوشهر","زنجان","گرگان","ساری","قزوین","شهرکرد","کرمانشاه","خرم‌آباد","ایلام","یاسوج","مازندران","گیلان","سمنان"];
+const PROVINCES = ["کرمان", "تهران", "اصفهان", "مشهد", "شیراز", "تبریز", "اهواز", "کرج", "قم", "رشت", "ارومیه", "زاهدان", "همدان", "سنندج", "بندرعباس", "اردبیل", "بیرجند", "بوشهر", "زنجان", "گرگان", "ساری", "قزوین", "شهرکرد", "کرمانشاه", "خرم‌آباد", "ایلام", "یاسوج", "مازندران", "گیلان", "سمنان"];
 
 function AddressForm({ onSubmit, loading, defaultValues, onCancel }) {
   const { register, handleSubmit, formState: { errors } } = useForm({ defaultValues });
@@ -86,9 +86,9 @@ export default function AddressesPage() {
       <div className="flex flex-col lg:flex-row gap-6 mt-2">
         <UserSidebar />
         <main className="flex-1">
-          <div className="bg-white rounded-2xl shadow-card overflow-hidden">
-            <div className="flex items-center justify-between p-5 border-b border-gray-100">
-              <h2 className="text-lg font-bold text-gray-800">آدرس‌هایم</h2>
+          <div className="glass rounded-2xl shadow-card overflow-hidden">
+            <div className="flex items-center justify-between p-5">
+              <h2 className="text-lg font-bold">آدرس‌هایم</h2>
               <Button size="sm" onClick={() => setModalOpen(true)}>
                 <Plus size={15} /> افزودن آدرس
               </Button>
@@ -108,27 +108,27 @@ export default function AddressesPage() {
             ) : (
               <div className="p-5 grid sm:grid-cols-2 gap-4">
                 {addresses.map((addr) => (
-                  <div key={addr._id} className={`border rounded-2xl p-4 transition-all ${addr.isDefault ? "border-coffee-300 bg-coffee-50" : "border-gray-200 hover:border-coffee-200"}`}>
+                  <div key={addr._id} className={`border rounded-2xl p-4 transition-all ${addr.isDefault ? "border-coffee-300 bg-coffee-50 dark:bg-coffee-700/10" : "border-gray-200 hover:border-coffee-200"}`}>
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center gap-2">
-                        <span className="font-bold text-gray-800 text-sm">{addr.title}</span>
+                        <span className="font-bold  text-sm">{addr.title}</span>
                         {addr.isDefault && (
-                          <span className="flex items-center gap-1 text-xs text-coffee-600 font-medium">
+                          <span className="flex items-center gap-1 text-xs text-coffee-600 dark:text-coffee-300 font-medium">
                             <Star size={11} className="fill-coffee-400" /> پیش‌فرض
                           </span>
-                        )}
+                        )}  
                       </div>
                       <div className="flex gap-1">
-                        <button onClick={() => setEditAddress(addr)} className="p-1.5 text-gray-400 hover:text-coffee-600 rounded-lg hover:bg-coffee-50 transition-colors">
+                        <button onClick={() => setEditAddress(addr)} className="p-1.5 hover:text-coffee-600 rounded-lg hover:bg-coffee-50 transition-colors ">
                           <Edit2 size={14} />
                         </button>
-                        <button onClick={() => deleteMutation.mutate(addr._id)} className="p-1.5 text-gray-400 hover:text-red-500 rounded-lg hover:bg-red-50 transition-colors">
+                        <button onClick={() => deleteMutation.mutate(addr._id)} className="p-1.5 hover:text-red-500 rounded-lg hover:bg-red-50 transition-colors">
                           <Trash2 size={14} />
                         </button>
                       </div>
                     </div>
-                    <p className="text-sm text-gray-600">{addr.recipientName}</p>
-                    <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                    <p className="text-sm">{addr.recipientName}</p>
+                    <p className="text-xs mt-1 leading-relaxed">
                       {addr.province}، {addr.city}، {addr.street}
                       {addr.buildingNumber && `، پلاک ${addr.buildingNumber}`}
                       {addr.unit && `، واحد ${addr.unit}`}
